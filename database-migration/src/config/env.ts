@@ -16,8 +16,8 @@ interface EnvVariables {
   Define un esquema de validación utilizando Joi 
   para asegurarse de que las variables de entorno
   cumplen con los requisitos esperados. 
-
   */
+
 const envVariablesSchema = joi
   .object<EnvVariables>({
     APP_PORT: joi.number().required(),
@@ -28,7 +28,7 @@ const envVariablesSchema = joi
     DB_USERNAME: joi.string().required(),
     DB_PASSWORD: joi.string().required(),
   })
-  .unknown(true);
+  .unknown(false);
 
 /* 
   ...}).unknown({bool})
