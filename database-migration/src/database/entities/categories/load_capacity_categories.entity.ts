@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { TravelOrders, Vehicles } from '../';
 
-@Entity()
+@Entity('load_capacity_categories')
 export class LoadCapacityCategories {
   @PrimaryGeneratedColumn()
   id_load_capacity_category: number;
@@ -9,7 +9,7 @@ export class LoadCapacityCategories {
   @Column({ length: 150 })
   category_name: string;
 
-  @Column({ length: 5 })
+  @Column({ length: 7 })
   category_short_name: string;
 
   @Column({ length: 50 })
@@ -32,7 +32,7 @@ export class LoadCapacityCategories {
   /* 
     relation with travel_orders
     */
-  @OneToMany(() => TravelOrders, 
+  @OneToMany(() => TravelOrders,
     (travelOrder) => travelOrder.load_capacity_category)
   travel_orders: TravelOrders[];
-} 
+}

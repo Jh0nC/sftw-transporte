@@ -13,10 +13,10 @@ import {
   VehicleDocuments,
   LoadTypeCategories,
   Drivers,
-  TravelOrders
+  TravelOrders,
 } from '../';
 
-@Entity()
+@Entity('vehicles')
 export class Vehicles {
   @PrimaryGeneratedColumn()
   id_vehicle: number;
@@ -24,7 +24,8 @@ export class Vehicles {
   /* 
     Relation with admin_companies
     */
-  @ManyToOne(() => AdminCompanies, (company) => company.vehicles)
+  @ManyToOne(() => AdminCompanies, 
+    (adminCompany) => adminCompany.vehicles)
   admin_company: AdminCompanies;
 
   /* 
@@ -43,14 +44,14 @@ export class Vehicles {
   /*  
     Relation with load_type_categories
     */
-  @ManyToOne(() => LoadTypeCategories,
+  @ManyToOne(() => LoadTypeCategories, 
     (typeCategory) => typeCategory.vehicles)
   load_type_category: LoadTypeCategories;
 
-  @Column({ length: 50 })
+  @Column({ length: 150 })
   model: string;
 
-  @Column({ length: 20 })
+  @Column({ length: 50 })
   color: string;
 
 //>---------------------------------------------------------------->
@@ -64,12 +65,13 @@ export class Vehicles {
     Relation with drivers
     */
   @ManyToMany(() => Drivers, (driver) => driver.vehicles)
-  drivers: Drivers[]
+  drivers: Drivers[];
 
   /* 
     Relation with travel_orders
     */
-  @ManyToMany(() => TravelOrders, (travelOrder) => travelOrder.vehicles)
+  @ManyToMany(() => TravelOrders, 
+    (travelOrder) => travelOrder.vehicles)
   travel_orders: TravelOrders[];
 
 //>---------------------------------------------------------------->

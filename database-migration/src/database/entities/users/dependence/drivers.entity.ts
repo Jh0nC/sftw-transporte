@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { Users, Vehicles } from '../..';
 
-@Entity()
+@Entity('drivers')
 export class Drivers {
   @PrimaryGeneratedColumn()
   id_driver: number;
@@ -47,6 +47,6 @@ export class Drivers {
     Relation with vehicles
     */
   @ManyToMany(() => Vehicles, (vehicle) => vehicle.drivers)
-  @JoinTable({ name: "drivers_vehicles" })
+  @JoinTable({ name: 'drivers_vehicles' })
   vehicles: Vehicles[];
 }

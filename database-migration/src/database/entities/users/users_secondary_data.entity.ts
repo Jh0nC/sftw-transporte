@@ -1,7 +1,13 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Users } from '../';
 
-@Entity()
+@Entity('user_secondary_data')
 export class UsersSecondaryData {
   @PrimaryGeneratedColumn()
   id_user_secondary_data: number;

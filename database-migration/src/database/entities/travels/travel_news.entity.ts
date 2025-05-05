@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { TravelOrders } from './travel_orders.entity';
 
-@Entity()
+@Entity('travel_news')
 export class TravelNews {
   @PrimaryGeneratedColumn()
   id_travel_new: number;
@@ -15,7 +15,8 @@ export class TravelNews {
   /* 
     Relation with travel_orders
     */
-  @ManyToOne(() => TravelOrders, (travelOrder) => travelOrder.travel_news)
+  @ManyToOne(() => TravelOrders, 
+    (travelOrder) => travelOrder.travel_news)
   @JoinColumn()
   travel_order: TravelOrders;
 

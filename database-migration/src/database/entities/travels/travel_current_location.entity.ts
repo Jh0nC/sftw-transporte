@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { TravelOrders } from '../';
 
-@Entity()
+@Entity('travel_current_location')
 export class TravelCurrentLocation {
   @PrimaryGeneratedColumn()
   id_current_location: number;

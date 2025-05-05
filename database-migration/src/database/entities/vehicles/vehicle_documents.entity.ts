@@ -1,7 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
 import { Vehicles } from '../';
 
-@Entity()
+@Entity('vehicle_documents')
 export class VehicleDocuments {
   @PrimaryGeneratedColumn()
   id_vehicle_documents: number;
@@ -9,7 +15,8 @@ export class VehicleDocuments {
   /* 
     Relation with vehicles
     */
-  @OneToOne(() => Vehicles, (vehicle) => vehicle.vehicle_documents)
+  @OneToOne(() => Vehicles, 
+    (vehicle) => vehicle.vehicle_documents)
   @JoinColumn()
   vehicle: Vehicles;
 

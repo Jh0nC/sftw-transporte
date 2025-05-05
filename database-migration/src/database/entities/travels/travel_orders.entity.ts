@@ -20,7 +20,7 @@ import {
   Vehicles,
 } from '../';
 
-@Entity()
+@Entity('travel_orders')
 export class TravelOrders {
   @PrimaryGeneratedColumn()
   id_travel_order: number;
@@ -48,7 +48,7 @@ export class TravelOrders {
   /* 
     relation with load_type_category
     */
-  @ManyToOne(() => LoadTypeCategories, 
+  @ManyToOne(() => LoadTypeCategories,
     (loadTypeCategory) => loadTypeCategory.travel_orders)
   load_type_category: LoadTypeCategories;
 
@@ -69,15 +69,15 @@ export class TravelOrders {
     Relation with vehicles
     */
   @ManyToMany(() => Vehicles, (vehicle) => vehicle.travel_orders)
-  @JoinTable({ name: "travel_orders_vehicles" })
+  @JoinTable({ name: 'travel_orders_vehicles' })
   vehicles: Vehicles[];
 
   /* 
     Relation with client_companies
     */
-  @ManyToMany(() => ClientCompanies, 
+  @ManyToMany(() => ClientCompanies,
     (clientCompany) => clientCompany.travel_orders)
-  @JoinTable({ name: "travel_orders_client_companies" })
+  @JoinTable({ name: 'travel_orders_client_companies' })
   client_companies: ClientCompanies[];
 
 //>---------------------------------------------------------------->
@@ -90,7 +90,7 @@ export class TravelOrders {
   /* 
     Relation with travel_current_location
     */
-  @OneToOne(() => TravelCurrentLocation, 
+  @OneToOne(() => TravelCurrentLocation,
     (travelCurrentLocation) => travelCurrentLocation.travel_order)
   travel_current_location: TravelCurrentLocation;
 
@@ -103,7 +103,7 @@ export class TravelOrders {
   /* 
     Relation with travel_stop_points
     */
-  @OneToMany(() => TravelStopPoints, 
+  @OneToMany(() => TravelStopPoints,
     (travelStopPoint) => travelStopPoint.travel_order)
   travel_stop_points: TravelStopPoints[];
 }

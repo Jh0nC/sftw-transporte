@@ -1,18 +1,18 @@
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Roles } from '../../';
 
-@Entity()
+@Entity('permissions')
 export class Permissions {
   @PrimaryGeneratedColumn()
   id_permission: number;
 
-  @Column({ length: 100 })
+  @Column({ length: 150 })
   permission_name: string;
 
   @Column({ length: 255 })
   description: string;
 
-//*---------------------------------------------------------------->
+//>---------------------------------------------------------------->
   /*
     * TypeORM transactional auto-created tables
   

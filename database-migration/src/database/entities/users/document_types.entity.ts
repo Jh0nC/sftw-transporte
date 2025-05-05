@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { AdminCompanies, Users } from '../';
 
-@Entity()
+@Entity('document_types')
 export class DocumentTypes {
   @PrimaryGeneratedColumn()
   id_document_type: number;
@@ -9,7 +9,7 @@ export class DocumentTypes {
   @Column({ length: 150 })
   document_type_name: string;
 
-  @Column({ length: 5 })
+  @Column({ length: 7 })
   document_type_short_name: string;
 
 //>---------------------------------------------------------------->
@@ -28,7 +28,7 @@ export class DocumentTypes {
   /* 
     Relation with admin_companies
     */
-  @OneToMany(() => AdminCompanies, 
+  @OneToMany(() => AdminCompanies,
     (adminCompany) => adminCompany.representative_document_type)
   admin_companies: AdminCompanies[];
 }

@@ -1,10 +1,10 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity('states')
 export class States {
   @PrimaryGeneratedColumn()
   id_state: number;
 
-  @Column({ length: 20 })
+  @Column({ length: 30 })
   state_name: string;
 }

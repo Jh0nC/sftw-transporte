@@ -1,7 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, OneToOne, JoinColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
 import { TravelStopPoints } from '../../';
 
-@Entity()
+@Entity('delivery_documents')
 export class DeliveryDocuments {
   @PrimaryGeneratedColumn()
   id_delivery_document: number;
@@ -9,7 +15,7 @@ export class DeliveryDocuments {
   /* 
     Relation with travel_stop_points
     */
-  @OneToOne(() => TravelStopPoints, 
+  @OneToOne(() => TravelStopPoints,
     (travelStopPoint) => travelStopPoint.delivery_documents)
   @JoinColumn()
   travel_stop_point: TravelStopPoints;

@@ -28,7 +28,7 @@ const envVariablesSchema = joi
     DB_USERNAME: joi.string().required(),
     DB_PASSWORD: joi.string().required(),
   })
-  .unknown(false);
+  .unknown(true);
 
 /* 
   ...}).unknown({bool})

@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { AdminCompanies, ClientCompanies } from '../';
 
-@Entity()
+@Entity('company_identification_types')
 export class CompanyIdentificationType {
   @PrimaryGeneratedColumn()
   id_identification_type: number;
@@ -9,7 +9,7 @@ export class CompanyIdentificationType {
   @Column({ length: 150 })
   identification_type_name: string;
 
-  @Column({ length: 5 })
+  @Column({ length: 7 })
   identification_type_short_name: string;
 
 //>---------------------------------------------------------------->
@@ -23,13 +23,13 @@ export class CompanyIdentificationType {
     Relation with admin_companies
     */
   @OneToMany(() => AdminCompanies, 
-    (companie) => companie.identification_type)
+    (adminCompany) => adminCompany.identification_type)
   admin_companies: AdminCompanies[];
 
   /* 
     Relation with client_companies
     */
   @OneToMany(() => ClientCompanies, 
-    (companie) => companie.identification_type)
+    (clientCompany) => clientCompany.identification_type)
   client_companies: ClientCompanies[];
 }

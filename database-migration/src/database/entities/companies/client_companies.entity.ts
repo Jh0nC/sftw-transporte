@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { CompanyIdentificationType, TravelOrders } from '../';
 
-@Entity()
+@Entity('client_companies')
 export class ClientCompanies {
   @PrimaryGeneratedColumn()
   id_client_company: number;
@@ -22,7 +22,7 @@ export class ClientCompanies {
   @Column({ length: 30 })
   identification_number: string;
 
-  @Column({ length: 100 })
+  @Column({ length: 150 })
   client_company_name: string;
 
 //>---------------------------------------------------------------->
@@ -35,6 +35,7 @@ export class ClientCompanies {
   /* 
     Relation with travel_orders
     */
-  @ManyToMany(() => TravelOrders, (travelOrder) => travelOrder.clientCompany)
+  @ManyToMany(() => TravelOrders, 
+    (travelOrder) => travelOrder.client_companies)
   travel_orders: TravelOrders[];
 }

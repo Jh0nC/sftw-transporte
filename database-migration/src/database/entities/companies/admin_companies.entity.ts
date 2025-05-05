@@ -16,7 +16,7 @@ import {
   DocumentTypes,
 } from '../';
 
-@Entity()
+@Entity('admin_companies')
 export class AdminCompanies {
   @PrimaryGeneratedColumn()
   id_companie: number;
@@ -37,7 +37,7 @@ export class AdminCompanies {
   @Column({ length: 30 })
   identification_number: string;
 
-  @Column({ length: 100 })
+  @Column({ length: 150 })
   company_name: string;
 
   @Column({ length: 255 })
@@ -55,18 +55,33 @@ export class AdminCompanies {
   /* 
     Relation with document_types
     */
-  @ManyToOne(() => DocumentTypes, 
+  @ManyToOne(() => DocumentTypes,
     (documentType) => documentType.admin_companies)
   representative_document_type: DocumentTypes;
 
   @Column({ length: 30 })
   representative_document: string;
 
-  @Column()
+  @Column({ type: 'boolean' })
   verified_email: boolean;
 
   @Column({ type: 'json' })
   json_string_config: any;
+
+  /*
+    ? Falta por definir la configuracion que se manejara en front 
+    > Se debe crear una interfaz para adaptar el tipo de dato
+    Ejemplo:
+    
+    interface JsonConfig {
+      propiedad1: string;
+      ...
+    }
+
+    @Column({ type: 'json' })
+    json_string_config: JsonConfig;
+  
+  */
 
 //>---------------------------------------------------------------->
   /*
@@ -97,8 +112,7 @@ export class AdminCompanies {
   /* 
     Relation with travel_orders
     */
-  @OneToMany(() => TravelOrders, 
-    (travelOrder) => travelOrder.admin_company)
+  @OneToMany(() => TravelOrders, (travelOrder) => travelOrder.admin_company)
   travel_orders: TravelOrders[];
 
   /* 

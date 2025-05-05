@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { AdminCompanies, Permissions, States, Users } from '../../';
 
-@Entity()
+@Entity('roles')
 export class Roles {
   @PrimaryGeneratedColumn()
   id_role: number;
@@ -16,7 +16,8 @@ export class Roles {
   /* 
     Relation with admin_compamnies
     */
-  @ManyToOne(() => AdminCompanies, (adminCompany) => adminCompany.roles)
+  @ManyToOne(() => AdminCompanies, 
+    (adminCompany) => adminCompany.roles)
   admin_company: AdminCompanies;
 
   @ManyToOne(() => States, (state) => state.id_state)
@@ -36,7 +37,7 @@ export class Roles {
     Relation with permissions
     */
   @ManyToMany(() => Permissions, (permission) => permission.roles)
-  @JoinTable({ name: 'roles_permissions' }) //? Name fot transactional table
+  @JoinTable({ name: 'roles_permissions' })
   permissions: Permissions[];
 
   /* 

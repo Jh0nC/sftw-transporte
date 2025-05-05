@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { TravelOrders, States, DeliveryDocuments } from '../../';
 
-@Entity()
+@Entity('travel_stop_points')
 export class TravelStopPoints {
   @PrimaryGeneratedColumn()
   id_travel_stop_point: number;
@@ -15,7 +15,8 @@ export class TravelStopPoints {
   /* 
     Relation with travel_orders
     */
-  @ManyToOne(() => TravelOrders, (travelOrder) => travelOrder.travel_stop_points)
+  @ManyToOne(() => TravelOrders,
+    (travelOrder) => travelOrder.travel_stop_points)
   travel_order: TravelOrders;
 
   /* 
@@ -23,20 +24,20 @@ export class TravelStopPoints {
     */
   @ManyToOne(() => States, (state) => state.id_state)
   state: States;
-  
+
   @Column()
   index_point: number;
 
-  @Column()
+  @Column({ length: 255 })
   latitude: string;
 
-  @Column()
+  @Column({ length: 255 })
   longitude: string;
 
-  @Column()
+  @Column({ length: 255 })
   address: string;
 
-  @Column()
+  @Column({ length: 255 })
   location: string;
 
 //>---------------------------------------------------------------->
@@ -49,7 +50,7 @@ export class TravelStopPoints {
   /* 
     Relation with delivery_documents
     */
-  @OneToOne(() => DeliveryDocuments, 
+  @OneToOne(() => DeliveryDocuments,
     (deliveryDocument) => deliveryDocument.travel_stop_point)
   delivery_documents: DeliveryDocuments;
 }

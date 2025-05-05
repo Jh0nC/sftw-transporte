@@ -17,7 +17,7 @@ import {
   Drivers,
 } from '../';
 
-@Entity()
+@Entity('users')
 export class Users {
   @PrimaryGeneratedColumn()
   id_user: number;
@@ -25,7 +25,8 @@ export class Users {
   /*  
     Relation with document_types
     */
-  @ManyToOne(() => DocumentTypes, (documentType) => documentType.users)
+  @ManyToOne(() => DocumentTypes, 
+    (documentType) => documentType.users)
   document_type: DocumentTypes;
 
   @Column({ length: 30 })
@@ -37,10 +38,10 @@ export class Users {
   @ManyToOne(() => States, (state) => state.id_state)
   state: States;
 
-  @Column({ length: 100 })
+  @Column({ length: 150 })
   user_first_name: string;
 
-  @Column({ length: 100 })
+  @Column({ length: 150 })
   user_last_name: string;
 
   @Column({ length: 20 })
@@ -52,10 +53,11 @@ export class Users {
   @Column({ length: 50 })
   email: string;
 
-  @Column({ length: 60 }) //? Bcrypt: create a 60 long character string with Hash 10
+  //? Bcrypt: crea una string de exactamente 60 caracteres al hacer hash 10
+  @Column({ length: 60 })
   password: string;
 
-  @Column({})
+  @Column({ type: 'boolean' })
   verfied_email: boolean;
 
 //>---------------------------------------------------------------->
@@ -69,14 +71,14 @@ export class Users {
     Relation with roles
     */
   @ManyToMany(() => Roles, (role) => role.users)
-  @JoinTable({ name: 'users_roles' }) //? Name for transactional table
+  @JoinTable({ name: 'users_roles' })
   roles: Roles[];
 
   /* 
     Relation with companies
     */
   @ManyToMany(() => AdminCompanies, (adminCompany) => adminCompany.users)
-  @JoinTable({ name: 'users_admin_companies' }) //? Name for transactional table
+  @JoinTable({ name: 'users_admin_companies' })
   admin_companies: AdminCompanies[];
 
 //>---------------------------------------------------------------->
