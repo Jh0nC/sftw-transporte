@@ -22,7 +22,7 @@ export class Drivers {
   user: Users;
 
   @Column({ length: 30 })
-  driver_license_number: number;
+  driver_license_number: string;
 
   @Column({ length: 30 })
   driver_license_category: string;

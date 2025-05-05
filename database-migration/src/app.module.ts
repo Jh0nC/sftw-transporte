@@ -11,6 +11,7 @@ import { envVariables } from './config';
       type: 'mysql',
       logging: true,
       synchronize: true,
+      autoLoadEntities: true,
       host: envVariables.dbHost,
       port: envVariables.dbPort,
       username: envVariables.dbUsername,
