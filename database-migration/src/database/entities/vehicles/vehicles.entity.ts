@@ -4,13 +4,16 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   OneToOne,
+  ManyToMany,
 } from 'typeorm';
 import {
   AdminCompanies,
   LoadCapacityCategories,
   States,
   VehicleDocuments,
-  LoadTypeCategories
+  LoadTypeCategories,
+  Drivers,
+  TravelOrders
 } from '../';
 
 @Entity()
@@ -18,29 +21,68 @@ export class Vehicles {
   @PrimaryGeneratedColumn()
   id_vehicle: number;
 
+  /* 
+    Relation with admin_companies
+    */
+  @ManyToOne(() => AdminCompanies, (company) => company.vehicles)
+  admin_company: AdminCompanies;
+
+  /* 
+    Relation with states
+    */
+  @ManyToOne(() => States, (state) => state.id_state)
+  state: States;
+
+  /*  
+    Relation with load_capacity_categories
+    */
+  @ManyToOne(() => LoadCapacityCategories,
+    (capacityCategory) => capacityCategory.vehicles)
+  load_capacity_category: LoadCapacityCategories;
+
+  /*  
+    Relation with load_type_categories
+    */
+  @ManyToOne(() => LoadTypeCategories,
+    (typeCategory) => typeCategory.vehicles)
+  load_type_category: LoadTypeCategories;
+
   @Column({ length: 50 })
   model: string;
 
   @Column({ length: 20 })
   color: string;
 
-  @ManyToOne(() => AdminCompanies, (companie) => companie.vehicles)
-  company: AdminCompanies;
+//>---------------------------------------------------------------->
+  /*
+    * TypeORM transactional auto-created tables
+  
+    > This are the atribute reference to transactional tables
+    */
 
-  @ManyToOne(() => States, (state) => state.id_state)
-  state: States;
+  /* 
+    Relation with drivers
+    */
+  @ManyToMany(() => Drivers, (driver) => driver.vehicles)
+  drivers: Drivers[]
 
-  @ManyToOne(
-    () => LoadCapacityCategories,
-    (capacityCategory) => capacityCategory.vehicles,
-  )
-  load_capacity_category: LoadCapacityCategories;
+  /* 
+    Relation with travel_orders
+    */
+  @ManyToMany(() => TravelOrders, (travelOrder) => travelOrder.vehicles)
+  travel_orders: TravelOrders[];
 
-  load_type_category: LoadTypeCategories;
+//>---------------------------------------------------------------->
+  /*  
+    % TypeORM reference connection atributes
+    
+    > This don't appear in database schema
+    */
 
-  @OneToOne(
-    () => VehicleDocuments,
-    (vehicleDocument) => vehicleDocument.vehicle,
-  )
-  vehicleDocuments: VehicleDocuments;
+  /* 
+    Relation with vehicle_documents
+    */
+  @OneToOne(() => VehicleDocuments,
+    (vehicleDocument) => vehicleDocument.vehicle)
+  vehicle_documents: VehicleDocuments;
 }

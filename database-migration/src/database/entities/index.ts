@@ -28,11 +28,13 @@ export * from './travels/travel_news.entity';
 export * from './travels/delivery_points/travel_stop_points.entity';
 export * from './travels/delivery_points/delivery_documents.entity';
 
+//? Related Categories
+export * from './categories/load_capacity_categories.entity';
+export * from './categories/load_type_categories.entity';
+
 //? Related Vehicles
 export * from './vehicles/vehicles.entity';
 export * from './vehicles/vehicle_documents.entity';
-export * from './vehicles/load_capacity_categories.entity';
-export * from './vehicles/load_type_categories.entity';
 
 /*
   % Entidades de transacción creadas automaticamente >>> TypeORM
@@ -41,17 +43,18 @@ export * from './vehicles/load_type_categories.entity';
     * { roles_permissions }
 
   > users - roles...
-    *
+    * { users_roles }
+
+  > drivers - vehicles
+    * { drivers_vehicles }
 
   > users - admin_companies...
-    *
+    * { users_admin_companies }
 
   > travel_orders - vehicles...
-    *
+    * { travel_orders_vehicles }
 
   > client_companies - travel_orders...
-    *
-
-  > ...
+    * { travel_orders_client_companies }
 
 */

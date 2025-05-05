@@ -13,6 +13,7 @@ import {
   TravelOrders,
   Vehicles,
   Roles,
+  DocumentTypes,
 } from '../';
 
 @Entity()
@@ -30,7 +31,7 @@ export class AdminCompanies {
     Relation with company_identificationTypes
     */
   @ManyToOne(() => CompanyIdentificationType,
-    (identificationType) => identificationType.adminCompanies)
+    (identificationType) => identificationType.admin_companies)
   identification_type: CompanyIdentificationType;
 
   @Column({ length: 30 })
@@ -45,11 +46,18 @@ export class AdminCompanies {
   @Column({ length: 20 })
   phone_number: string;
 
-  @Column({ length: 50 })
+  @Column({ length: 150 })
   email: string;
 
   @Column({ length: 200 })
   legal_representative: string;
+
+  /* 
+    Relation with document_types
+    */
+  @ManyToOne(() => DocumentTypes, 
+    (documentType) => documentType.admin_companies)
+  representative_document_type: DocumentTypes;
 
   @Column({ length: 30 })
   representative_document: string;
@@ -86,9 +94,16 @@ export class AdminCompanies {
   @OneToMany(() => Roles, (role) => role.admin_company)
   roles: Roles[];
 
-  @OneToMany(() => TravelOrders, (travelOrder) => travelOrder.company)
-  travelOrders: TravelOrders[];
+  /* 
+    Relation with travel_orders
+    */
+  @OneToMany(() => TravelOrders, 
+    (travelOrder) => travelOrder.admin_company)
+  travel_orders: TravelOrders[];
 
-  @OneToMany(() => Vehicles, (vehicle) => vehicle.company)
-  vehicles: TravelOrders[];
+  /* 
+    Relation with vehicles
+    */
+  @OneToMany(() => Vehicles, (vehicle) => vehicle.admin_company)
+  vehicles: Vehicles[];
 }

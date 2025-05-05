@@ -12,9 +12,24 @@ export class CompanyIdentificationType {
   @Column({ length: 5 })
   identification_type_short_name: string;
 
-  @OneToMany(() => AdminCompanies, (companie) => companie.identification_type)
-  adminCompanies: AdminCompanies[];
+//>---------------------------------------------------------------->
+  /*  
+    % TypeORM reference connection atributes
+    
+    > This don't appear in database schema
+    */
 
-  @OneToMany(() => ClientCompanies, (companie) => companie.identification_type)
-  clientCompanies: ClientCompanies[];
+  /* 
+    Relation with admin_companies
+    */
+  @OneToMany(() => AdminCompanies, 
+    (companie) => companie.identification_type)
+  admin_companies: AdminCompanies[];
+
+  /* 
+    Relation with client_companies
+    */
+  @OneToMany(() => ClientCompanies, 
+    (companie) => companie.identification_type)
+  client_companies: ClientCompanies[];
 }

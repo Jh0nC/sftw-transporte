@@ -4,7 +4,6 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
-  DateTimeColumn,
 } from 'typeorm';
 import { TravelOrders } from './travel_orders.entity';
 
@@ -13,16 +12,22 @@ export class TravelNews {
   @PrimaryGeneratedColumn()
   id_travel_new: number;
 
-  @ManyToOne(() => TravelOrders)
-  @JoinColumn({ name: 'travel_order_id' })
+  /* 
+    Relation with travel_orders
+    */
+  @ManyToOne(() => TravelOrders, (travelOrder) => travelOrder.travel_news)
+  @JoinColumn()
   travel_order: TravelOrders;
 
   @Column({ length: 255 })
   description: string;
 
   @Column({ length: 255 })
-  on_location: string;
+  on_location_latitude: string;
 
-  @DateTimeColumn()
+  @Column({ length: 255 })
+  on_location_longitude: string;
+
+  @Column({ type: 'datetime' })
   registered_datetime: Date;
 }

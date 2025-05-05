@@ -1,15 +1,28 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
-import { TravelOrders } from './travel_orders.entity'; // Asegúrate de que la ruta sea correcta
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
+import { TravelOrders } from '../';
 
 @Entity()
 export class TravelCurrentLocation {
   @PrimaryGeneratedColumn()
   id_current_location: number;
 
-  @ManyToOne(() => TravelOrders)
-  @JoinColumn({ name: 'travel_order_id' })
+  /* 
+    Relation with travel_orders
+    */
+  @OneToOne(() => TravelOrders,
+    (travelOrder) => travelOrder.travel_current_location)
+  @JoinColumn()
   travel_order: TravelOrders;
 
   @Column({ length: 255 })
-  live_location: string;
+  latitude: string;
+
+  @Column({ length: 255 })
+  longitude: string;
 }

@@ -76,7 +76,7 @@ export class Users {
     Relation with companies
     */
   @ManyToMany(() => AdminCompanies, (adminCompany) => adminCompany.users)
-  @JoinTable({ name: 'users_companies' }) //? Name for transactional table
+  @JoinTable({ name: 'users_admin_companies' }) //? Name for transactional table
   admin_companies: AdminCompanies[];
 
 //>---------------------------------------------------------------->
@@ -94,15 +94,15 @@ export class Users {
   user_secondary_data: UsersSecondaryData;
 
   /* 
+    Relation with drivers
+    */
+  @OneToOne(() => Drivers, (driver) => driver.user)
+  driver: Drivers[];
+
+  /* 
     Relation with users_administratives
     */
   @ManyToOne(() => UserAdministratives,
     (userAdministrative) => userAdministrative.user)
   user_administrative: UserAdministratives;
-
-  /* 
-    Relation with drivers
-    */
-  @OneToOne(() => Drivers, (driver) => driver.user)
-  driver: Drivers[];
 }
