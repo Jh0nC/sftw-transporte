@@ -32,7 +32,7 @@ const envVariablesSchema = joi
 
     // ... other variables
   })
-  .unknown(false);
+  .unknown(true);
 
 /* 
   ...}).unknown({bool})

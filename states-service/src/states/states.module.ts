@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { StatesService } from './states.service';
 import { StatesController } from './states.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { State } from './entities';
+import { States } from './entities';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([State])],
+  imports: [TypeOrmModule.forFeature([States])],
   controllers: [StatesController],
   providers: [StatesService],
   exports: [TypeOrmModule],

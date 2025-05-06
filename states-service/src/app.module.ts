@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { envVariables } from './config';
 import { StatesModule } from './states/states.module';
-import { State } from './states/entities/';
+import { States } from './states/entities/index';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { State } from './states/entities/';
       username: envVariables.dbUsername,
       password: envVariables.dbPassword,
       database: envVariables.dbName,
-      entities: [State],
+      entities: [States],
     }),
     StatesModule,
   ],

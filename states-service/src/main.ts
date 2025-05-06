@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { envVariables } from './config';
 
 async function main() {
@@ -17,5 +17,8 @@ async function main() {
   );
 
   await app.listen(envVariables.appPort);
+  Logger.log(
+    `App is running on port ${envVariables.appPort}, url: http://localhost:${envVariables.appPort}`,
+  );
 }
 main();
