@@ -85,26 +85,6 @@ export class StatesService {
   }
 
   /*
-   * Obtiene un estado específico por su nombre.
-
-  > Retorna una respuesta de éxito con el estado encontrado o una respuesta de "no encontrado" si el nombre no existe.
-  > Maneja posibles errores durante el proceso de obtención.
-    */
-  async findOneByName(name: string) {
-    try {
-      const state = await this.statesRespository.findOneBy({ state_name: name });
-
-      if (!state) {
-        return notFoundResponse('state_name');
-      }
-
-      return successResponse(state, 'State retrieved successfully');
-    } catch (error) {
-      return errorResponse(error, `Error retrieving state`);
-    }
-  }
-
-  /*
    * Actualiza un estado existente.
   
   > Verifica si el estado con el ID proporcionado existe.

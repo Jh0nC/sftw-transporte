@@ -30,11 +30,6 @@ export class StatesController {
     return this.statesService.findOne(id);
   }
 
-  @Get(':name')
-  findOneByName(@Param('name') name: string) {
-    return this.statesService.findOneByName(name);
-  }
-
   @Put(':id')
   update(@Param('id') id: number, @Body() updateStateDto: UpdateStateDto) {
     return this.statesService.update(id, updateStateDto);
