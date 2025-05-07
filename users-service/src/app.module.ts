@@ -7,7 +7,7 @@ import {
   UsersModule,
   RolesModule,
   PermissionsModule,
-} from './core/';
+} from './core/index.module';
 import * as entities from './database';
 
 @Module({

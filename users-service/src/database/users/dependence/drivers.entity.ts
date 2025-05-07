@@ -7,7 +7,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Users, Vehicles } from '../..';
+import { Users } from '../..';
 
 @Entity('drivers')
 export class Drivers {
@@ -35,18 +35,4 @@ export class Drivers {
 
   @Column({ length: 255 })
   driver_license_photo: string;
-
-//>---------------------------------------------------------------->
-  /*
-    * TypeORM transactional auto-created tables
-  
-    > This are the atribute reference to transactional tables
-    */
-
-  /* 
-    Relation with vehicles
-    */
-  @ManyToMany(() => Vehicles, (vehicle) => vehicle.drivers)
-  @JoinTable({ name: 'drivers_vehicles' })
-  vehicles: Vehicles[];
 }

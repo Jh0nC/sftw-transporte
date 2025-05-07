@@ -6,7 +6,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { AdminCompanies, Permissions, States, Users } from '../../';
+import { AdminCompanies, Permissions, States, Users } from '../';
 
 @Entity('roles')
 export class Roles {

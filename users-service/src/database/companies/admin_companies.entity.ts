@@ -17,7 +17,7 @@ import {
 @Entity('admin_companies')
 export class AdminCompanies {
   @PrimaryGeneratedColumn()
-  id_companie: number;
+  id_admin_company: number;
 
   /* 
     Relation with states
@@ -60,10 +60,10 @@ export class AdminCompanies {
   @Column({ length: 30 })
   representative_document: string;
 
-  @Column({ type: 'boolean' })
+  @Column({ type: 'boolean', default: false })
   verified_email: boolean;
 
-  @Column({ type: 'json' })
+  @Column({ type: 'json', nullable: true })
   json_string_config: any;
 
   /*
@@ -76,7 +76,7 @@ export class AdminCompanies {
       ...
     }
 
-    @Column({ type: 'json' })
+    @Column({ type: 'json', nullable: true })
     json_string_config: JsonConfig;
   
   */
