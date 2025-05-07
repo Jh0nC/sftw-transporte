@@ -9,7 +9,7 @@ export const notFoundResponse = (reqAttribute: string) => {
 };
 
 export const errorResponse = (error: any, message?: string) => {
-  Logger.error('\nError:', error);
+  Logger.error(`\nError: ${message || 'Unexpected error'}`, error.stack);
   return {
     statusCode: 500,
     message: message || 'Unexpected error',
@@ -20,7 +20,7 @@ export const errorResponse = (error: any, message?: string) => {
 export const successResponse = (data: any, message?: string) => {
   return {
     statusCode: 200,
-    message: message || 'Succes operation',
+    message: message || 'Successful operation',
     data: data,
   };
 };
@@ -31,7 +31,7 @@ export const conflictResponse = (
   message?: string,
 ) => {
   Logger.error(
-    `: ${attribute || 'Something'} is in conflict: ${conflict || undefined}`,
+    `Conflict - Attribute: ${attribute || 'N/A'}, Details: ${conflict || 'N/A'}, Message: ${message || 'There\'s a conflict in the operation.'}`,
   );
   return {
     statusCode: 409,
@@ -41,5 +41,16 @@ export const conflictResponse = (
         ? message
         : `There's a conflict in the operation. Please review the details.`,
     conflict: conflict || 'Conflict',
+  };
+};
+
+export const emptyDataResponse = (attributes: string | string[]) => {
+  const attributesString = Array.isArray(attributes)
+    ? attributes.join(', ')
+    : attributes;
+  return {
+    statusCode: 400,
+    message: `No valid fields were provided for update. Please include at least one of the following attributes: ${attributesString}`,
+    error: 'Bad Request',
   };
 };
