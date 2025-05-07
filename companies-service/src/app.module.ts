@@ -6,8 +6,8 @@ import {
   AdminCompaniesModule,
   ClientCompaniesModule,
   CompanyIdentificationTypesModule,
-} from './core/index.module';
-import * as entities from './database';
+} from 'src/core/index.module';
+import * as entities from 'src/database';
 
 @Module({
   imports: [
