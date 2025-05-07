@@ -15,7 +15,7 @@ import {
 export class StatesService {
   constructor(
     @InjectRepository(States)
-    private readonly statesRespository: Repository<States>,
+    private readonly statesRepository: Repository<States>,
   ) {}
 
   /*
@@ -29,7 +29,7 @@ export class StatesService {
     try {
       const { state_name } = createStateDto;
 
-      const stateNameExist = await this.statesRespository.findOneBy({
+      const stateNameExist = await this.statesRepository.findOneBy({
         state_name,
       });
 
@@ -37,11 +37,11 @@ export class StatesService {
         return conflictResponse('state_name', 'already exist');
       }
 
-      const newState = this.statesRespository.create({
+      const newState = this.statesRepository.create({
         state_name,
       });
 
-      await this.statesRespository.save(newState);
+      await this.statesRepository.save(newState);
 
       return successResponse(newState, 'State created successfully');
     } catch (error) {
@@ -50,16 +50,35 @@ export class StatesService {
   }
 
   /*
-   * Obtiene todos los estados de la base de datos.
-
-  > Retorna una respuesta de éxito con un array de estados.
+    * Obtiene todos los estados de la base de datos con soporte para paginación opcional.
+    
+  > Si no se proporcionan `pageIndex` o `limitNumber`, retorna todos los estados sin paginar.
+  > Si se proporcionan `pageIndex` y `limitNumber`, realiza la paginación de los resultados.
+  > Retorna una respuesta de éxito. Si se pagina, incluye los datos de los estados y el total de estados. Si no se pagina, solo incluye el array de estados.
   > Maneja posibles errores durante el proceso de obtención.
-   */
-  async findAll() {
+    */
+  async findAll(
+    pageIndex?: number | undefined,
+    limitNumber?: number | undefined,
+  ) {
     try {
-      const states = await this.statesRespository.find();
+      if (pageIndex === undefined || limitNumber === undefined) {
+        const states = await this.statesRepository.find();
 
-      return successResponse(states, 'States retrieved successfully');
+        return successResponse(states, 'All states retrieved successfully');
+      } else {
+        const skip = (pageIndex - 1) * limitNumber;
+
+        const [states, total] = await this.statesRepository.findAndCount({
+          skip,
+          take: limitNumber,
+        });
+
+        return successResponse(
+          { data: states, total },
+          'Paginated states retrieved successfully',
+        );
+      }
     } catch (error) {
       return errorResponse(error, 'Error retrieving states');
     }
@@ -73,7 +92,7 @@ export class StatesService {
    */
   async findOne(id: number) {
     try {
-      const state = await this.statesRespository.findOneBy({ id_state: id });
+      const state = await this.statesRepository.findOneBy({ id_state: id });
 
       if (!state) {
         return notFoundResponse('id_state');
@@ -92,7 +111,7 @@ export class StatesService {
     */
   async findOneByName(name: string) {
     try {
-      const state = await this.statesRespository.findOneBy({
+      const state = await this.statesRepository.findOneBy({
         state_name: name,
       });
 
@@ -115,13 +134,13 @@ export class StatesService {
    */
   async update(id: number, updateStateDto: UpdateStateDto) {
     try {
-      const state = await this.statesRespository.findOneBy({ id_state: id });
+      const state = await this.statesRepository.findOneBy({ id_state: id });
       if (!state) {
         return notFoundResponse('id_state');
       }
 
       if (updateStateDto.state_name) {
-        const stateNameExist = await this.statesRespository.findOneBy({
+        const stateNameExist = await this.statesRepository.findOneBy({
           state_name: updateStateDto.state_name,
         });
 
@@ -130,9 +149,9 @@ export class StatesService {
         }
       }
 
-      await this.statesRespository.update(id, updateStateDto);
+      await this.statesRepository.update(id, updateStateDto);
 
-      const updatedState = await this.statesRespository.findOneBy({
+      const updatedState = await this.statesRepository.findOneBy({
         id_state: id,
       });
 
@@ -152,13 +171,13 @@ export class StatesService {
 
   async remove(id: number) {
     try {
-      const state = await this.statesRespository.findOneBy({ id_state: id });
+      const state = await this.statesRepository.findOneBy({ id_state: id });
 
       if (!state) {
         return notFoundResponse('id_state');
       }
 
-      await this.statesRespository.delete(id);
+      await this.statesRepository.delete(id);
 
       return successResponse(null, 'State deleted successfully');
     } catch (error) {

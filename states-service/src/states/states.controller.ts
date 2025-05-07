@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   Put,
+  Query,
 } from '@nestjs/common';
 import { StatesService } from './states.service';
 import { CreateStateDto } from './dto/create-state.dto';
@@ -21,8 +22,11 @@ export class StatesController {
   }
 
   @Get()
-  findAll() {
-    return this.statesService.findAll();
+  findAll(@Query('page') page: string, @Query('limit') limit: string) {
+    const pageIndex = page ? parseInt(page, 10) : undefined;
+    const limitNumber = limit ? parseInt(limit, 10) : undefined;
+
+    return this.statesService.findAll(pageIndex, limitNumber);
   }
 
   @Get(':id')
