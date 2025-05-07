@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { AdminCompaniesService } from './admin-companies.service';
 import { CreateAdminCompanyDto } from './dto/create-admin-company.dto';
 import { UpdateAdminCompanyDto } from './dto/update-admin-company.dto';
@@ -13,22 +22,23 @@ export class AdminCompaniesController {
   }
 
   @Get()
-  findAll() {
-    return this.adminCompaniesService.findAll();
+  findAll(@Query('page') page: string, @Query('limit') limit: string) {
+    const pageIndex = page ? parseInt(page, 10) : undefined;
+    const limitNumber = limit ? parseInt(limit, 10) : undefined;
+
+    return this.adminCompaniesService.findAll(pageIndex, limitNumber);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.adminCompaniesService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.adminCompaniesService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAdminCompanyDto: UpdateAdminCompanyDto) {
-    return this.adminCompaniesService.update(+id, updateAdminCompanyDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.adminCompaniesService.remove(+id);
+  update(
+    @Param('id') id: number,
+    @Body() updateAdminCompanyDto: UpdateAdminCompanyDto,
+  ) {
+    return this.adminCompaniesService.update(id, updateAdminCompanyDto);
   }
 }

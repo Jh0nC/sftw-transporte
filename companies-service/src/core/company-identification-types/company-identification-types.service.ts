@@ -148,7 +148,7 @@ export class CompanyIdentificationTypesService {
           'identification_type.id_identification_type = :id',
           { id },
         )
-        .select(['admin_company.id_companie', 'admin_company.company_name'])
+        .select(['admin_company.id_admin_company', 'admin_company.company_name'])
         .getMany();
 
       return successResponse(
