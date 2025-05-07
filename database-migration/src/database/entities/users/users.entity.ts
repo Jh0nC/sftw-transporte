@@ -57,7 +57,7 @@ export class Users {
   @Column({ length: 60 })
   password: string;
 
-  @Column({ type: 'boolean' })
+  @Column({ type: 'boolean', default: false })
   verfied_email: boolean;
 
 //>---------------------------------------------------------------->
