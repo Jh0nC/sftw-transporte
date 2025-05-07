@@ -57,10 +57,7 @@ export class StatesService {
   > Retorna una respuesta de éxito. Si se pagina, incluye los datos de los estados y el total de estados. Si no se pagina, solo incluye el array de estados.
   > Maneja posibles errores durante el proceso de obtención.
     */
-  async findAll(
-    pageIndex?: number | undefined,
-    limitNumber?: number | undefined,
-  ) {
+  async findAll(pageIndex?: number, limitNumber?: number) {
     try {
       if (pageIndex === undefined || limitNumber === undefined) {
         const states = await this.statesRepository.find();
