@@ -4,10 +4,11 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Users, Vehicles } from '../..';
+import { States, Users, Vehicles } from '../..';
 
 @Entity('drivers')
 export class Drivers {
@@ -20,6 +21,12 @@ export class Drivers {
   @OneToOne(() => Users, (user) => user.driver)
   @JoinColumn()
   user: Users;
+
+  /* 
+    Relation with states
+    */
+  @ManyToOne(() => States, (state) => state.id_state)
+  state: States;
 
   @Column({ length: 30 })
   driver_license_number: string;
@@ -36,7 +43,7 @@ export class Drivers {
   @Column({ length: 255 })
   driver_license_photo: string;
 
-//>---------------------------------------------------------------->
+  //>---------------------------------------------------------------->
   /*
     * TypeORM transactional auto-created tables
   

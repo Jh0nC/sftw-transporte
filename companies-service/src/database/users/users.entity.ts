@@ -53,7 +53,7 @@ export class Users {
   password: string;
 
   @Column({ type: 'boolean', default: false })
-  verfied_email: boolean;
+  verified_email: boolean;
 
 //>---------------------------------------------------------------->
   /*

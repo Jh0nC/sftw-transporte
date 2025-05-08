@@ -4,8 +4,9 @@ import {
   PrimaryGeneratedColumn,
   OneToOne,
   JoinColumn,
+  ManyToOne,
 } from 'typeorm';
-import { Vehicles } from '../';
+import { States, Vehicles } from '../';
 
 @Entity('vehicle_documents')
 export class VehicleDocuments {
@@ -19,6 +20,12 @@ export class VehicleDocuments {
     (vehicle) => vehicle.vehicle_documents)
   @JoinColumn()
   vehicle: Vehicles;
+
+  /* 
+    Relation with states
+    */
+  @ManyToOne(() => States, (state) => state.id_state)
+  state: States;
 
   @Column({ length: 10 })
   vehicle_plate: string;

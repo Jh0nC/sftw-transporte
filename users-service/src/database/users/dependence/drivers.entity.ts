@@ -2,12 +2,11 @@ import {
   Column,
   Entity,
   JoinColumn,
-  JoinTable,
-  ManyToMany,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Users } from '../..';
+import { States, Users } from '../..';
 
 @Entity('drivers')
 export class Drivers {
@@ -20,6 +19,12 @@ export class Drivers {
   @OneToOne(() => Users, (user) => user.driver)
   @JoinColumn()
   user: Users;
+
+  /* 
+    Relation with states
+    */
+  @ManyToOne(() => States, (state) => state.id_state)
+  state: States;
 
   @Column({ length: 30 })
   driver_license_number: string;
