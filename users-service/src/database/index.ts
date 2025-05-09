@@ -21,6 +21,9 @@ export * from './users/users_secondary_data.entity'
 export * from './users/dependence/drivers.entity'
 export * from './users/dependence/users_administratives.entity'
 
+// transactional: users_admin_companies
+export * from './companies/users-admin-companies.entity'
+
 /* 
   % Entidades de referencia
   > En este servicio estas entidades unicamente

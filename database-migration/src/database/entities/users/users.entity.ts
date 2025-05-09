@@ -4,6 +4,7 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -12,7 +13,7 @@ import {
   DocumentTypes,
   Roles,
   UsersSecondaryData,
-  AdminCompanies,
+  UsersAdminCompanies,
   UserAdministratives,
   Drivers,
 } from '../';
@@ -74,13 +75,6 @@ export class Users {
   @JoinTable({ name: 'users_roles' })
   roles: Roles[];
 
-  /* 
-    Relation with companies
-    */
-  @ManyToMany(() => AdminCompanies, (adminCompany) => adminCompany.users)
-  @JoinTable({ name: 'users_admin_companies' })
-  admin_companies: AdminCompanies[];
-
 //>---------------------------------------------------------------->
   /*  
     % TypeORM reference connection atributes
@@ -94,6 +88,13 @@ export class Users {
   @OneToOne(() => UsersSecondaryData,
     (userSecondaryData) => userSecondaryData.user)
   user_secondary_data: UsersSecondaryData;
+
+  /* 
+    Transaccional relation with admin_companies
+    */
+  @OneToMany(() => UsersAdminCompanies, 
+    (userAdminCompany) => userAdminCompany.user)
+  user_admin_company: UsersAdminCompanies[];
 
   /* 
     Relation with drivers

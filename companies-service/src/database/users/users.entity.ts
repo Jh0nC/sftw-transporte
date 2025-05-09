@@ -1,15 +1,14 @@
 import {
   Column,
   Entity,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import {
   States,
   DocumentTypes,
-  AdminCompanies,
+  UsersAdminCompanies,
 } from '../';
 
 @Entity('users')
@@ -56,16 +55,17 @@ export class Users {
   verified_email: boolean;
 
 //>---------------------------------------------------------------->
-  /*
-    * TypeORM transactional auto-created tables
-  
-    > This are the atribute reference to transactional tables
+  /*  
+    % TypeORM reference connection atributes
+    
+    > This don't appear in database schema
     */
 
   /* 
-    Relation with companies
+    Transaccional relation with admin_companies
     */
-  @ManyToMany(() => AdminCompanies, (adminCompany) => adminCompany.users)
-  @JoinTable({ name: 'users_admin_companies' })
-  admin_companies: AdminCompanies[];
+  @OneToMany(() => UsersAdminCompanies, 
+    (userAdminCompany) => userAdminCompany.user)
+  user_admin_company: UsersAdminCompanies[];
+
 }

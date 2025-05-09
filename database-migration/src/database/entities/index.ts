@@ -7,6 +7,9 @@
 
 export * from './states.entity';
 
+//> Transaccionals
+export * from './companies/users-admin-companies.entity'
+
 //? Related Users
 export * from './users/users.entity';
 export * from './users/users_secondary_data.entity';

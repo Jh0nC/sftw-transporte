@@ -4,6 +4,7 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -15,6 +16,7 @@ import {
   AdminCompanies,
   UserAdministratives,
   Drivers,
+  UsersAdminCompanies,
 } from '../';
 
 @Entity('users')
@@ -74,19 +76,20 @@ export class Users {
   @JoinTable({ name: 'users_roles' })
   roles: Roles[];
 
-  /* 
-    Relation with companies
-    */
-  @ManyToMany(() => AdminCompanies, (adminCompany) => adminCompany.users)
-  @JoinTable({ name: 'users_admin_companies' })
-  admin_companies: AdminCompanies[];
-
 //>---------------------------------------------------------------->
   /*  
     % TypeORM reference connection atributes
     
     > This don't appear in database schema
     */
+
+  /* 
+    Transaccional relation with admin_companies
+    */
+  @OneToMany(() => UsersAdminCompanies, 
+    (userAdminCompany) => userAdminCompany.user)
+  user_admin_company: UsersAdminCompanies[];
+
 
   /* 
     Relation with the secondary data of the user

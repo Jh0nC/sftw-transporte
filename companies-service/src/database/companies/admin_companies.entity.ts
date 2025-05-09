@@ -1,15 +1,15 @@
 import {
   Column,
   Entity,
-  ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import {
   States,
   CompanyIdentificationType,
-  Users,
   DocumentTypes,
+  UsersAdminCompanies,
 } from '../';
 
 @Entity('admin_companies')
@@ -80,15 +80,16 @@ export class AdminCompanies {
   */
 
 //>---------------------------------------------------------------->
-  /*
-    * TypeORM transactional auto-created tables
+  /*  
+    % TypeORM reference connection atributes
     
-    > This are the atribute reference to transactional tables
+    > This don't appear in database schema
     */
 
   /* 
-    Relation with users
+    Transaccional relation with admin_companies
     */
-  @ManyToMany(() => Users, (user) => user.admin_companies)
-  users: Users[];
+  @OneToMany(() => UsersAdminCompanies, 
+    (userAdminCompany) => userAdminCompany.user)
+  user_admin_company: UsersAdminCompanies[];
 }

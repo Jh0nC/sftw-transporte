@@ -13,6 +13,9 @@ export * from './companies/client_companies.entity'
 // company_identification_types
 export * from './company-identifiction-types/company_identification_types.entity'
 
+// transactional: users_admin_companies
+export * from './companies/users-admin-companies.entity'
+
 /* 
   % Entidades de referencia
   > En este servicio estas entidades unicamente

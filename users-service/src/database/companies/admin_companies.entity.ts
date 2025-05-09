@@ -12,6 +12,7 @@ import {
   Users,
   Roles,
   DocumentTypes,
+  UsersAdminCompanies,
 } from '../';
 
 @Entity('admin_companies')
@@ -82,24 +83,18 @@ export class AdminCompanies {
   */
 
 //>---------------------------------------------------------------->
-  /*
-    * TypeORM transactional auto-created tables
-    
-    > This are the atribute reference to transactional tables
-    */
-
-  /* 
-    Relation with users
-    */
-  @ManyToMany(() => Users, (user) => user.admin_companies)
-  users: Users[];
-
-//>---------------------------------------------------------------->
   /*  
     % TypeORM reference connection atributes
     
     > This don't appear in database schema
     */
+
+  /* 
+    Transaccional relation with admin_companies
+    */
+  @OneToMany(() => UsersAdminCompanies, 
+    (userAdminCompany) => userAdminCompany.user)
+  user_admin_company: UsersAdminCompanies[];
 
   /* 
     Relation with roles
