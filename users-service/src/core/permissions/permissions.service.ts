@@ -62,7 +62,9 @@ export class PermissionsService {
   async findAll(pageIndex?: number, limitNumber?: number) {
     try {
       if (pageIndex === undefined || limitNumber === undefined) {
-        const permissions = await this.permissionsRepository.find();
+        const permissions = await this.permissionsRepository.find({
+          relations: ['roles'],
+        });
 
         return successResponse(
           permissions,
@@ -110,31 +112,50 @@ export class PermissionsService {
   }
 
   /*
-    * Obtiene todos los roles que tienen asignado un permiso específico.
+  * Obtiene todos los roles que tienen asignado un permiso específico con soporte para paginación opcional.
 
-  > Busca el permiso por su ID, incluyendo la relación con la tabla de roles.
-  > Retorna una respuesta de éxito con un array de roles que tienen el permiso asignado o una respuesta de "no encontrado" si el ID del permiso no existe.
-  > Maneja posibles errores durante el proceso de obtención.
+    > Busca el permiso por su ID, incluyendo la relación con la tabla de roles.
+    > Si no se proporcionan `pageIndex` o `limitNumber`, retorna todos los roles asociados al permiso.
+    > Si se proporcionan `pageIndex` y `limitNumber`, realiza la paginación de los roles asociados al permiso.
+    > Retorna una respuesta de éxito con un array de roles (paginados o no) que tienen el permiso asignado o una respuesta de "no encontrado" si el ID del permiso no existe. Si se pagina, incluye los datos de los roles y el total de roles.
+    > Maneja posibles errores durante el proceso de obtención.
     */
-  async findRolesWithPermission(id: number) {
+  async findRolesWithPermission(
+    id: number,
+    pageIndex?: number,
+    limitNumber?: number,
+  ) {
     try {
-      const rolesWithPermission = await this.permissionsRepository.findOne({
+      const permission = await this.permissionsRepository.findOne({
         where: { id_permission: id },
         relations: ['roles'],
       });
 
-      if (!rolesWithPermission) {
+      if (!permission) {
         return notFoundResponse('id_permission');
       }
 
-      return successResponse(
-        rolesWithPermission.roles,
-        `Roles with permission ID ${id} retrieved successfully`,
-      );
+      const roles = permission.roles;
+
+      if (pageIndex === undefined || limitNumber === undefined) {
+        return successResponse(
+          roles,
+          `Roles with permission ID: ${id} retrieved successfully`,
+        );
+      } else {
+        const skip = (pageIndex - 1) * limitNumber;
+        const paginatedRoles = roles.slice(skip, skip + limitNumber);
+        const total = roles.length;
+
+        return successResponse(
+          { data: paginatedRoles, total },
+          `Paginated roles with permission ID: ${id} retrieved successfully`,
+        );
+      }
     } catch (error) {
       return errorResponse(
         error,
-        `Error retrieving roles with permission ID ${id}`,
+        `Error retrieving roles with permission ID: ${id}`,
       );
     }
   }

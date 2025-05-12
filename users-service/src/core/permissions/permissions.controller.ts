@@ -35,7 +35,11 @@ export class PermissionsController {
   }
 
   @Get('roles-with/:id')
-  findRolesWithPermission(@Param('id') id: number) {
+  findRolesWithPermission(
+    @Param('id') id: number,
+    @Query('page') page: string,
+    @Query('limit') limit: string,
+  ) {
     return this.permissionsService.findRolesWithPermission(id);
   }
 
