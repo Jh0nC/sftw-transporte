@@ -10,7 +10,8 @@ import {
   errorResponse,
   notFoundResponse,
   successResponse,
-} from '../../utils';
+  valueExistValidate,
+} from 'src/utils';
 
 @Injectable()
 export class DocumentTypesService {
@@ -32,23 +33,17 @@ export class DocumentTypesService {
       const { document_type_name, document_type_short_name } =
         createDocumentTypeDto;
 
-      const documentTypeNameExist =
-        await this.documentTypesRepository.findOneBy({
-          document_type_name,
-        });
+      await valueExistValidate(
+        this.documentTypesRepository,
+        'document_type_name',
+        document_type_name,
+      );
 
-      if (documentTypeNameExist) {
-        return conflictResponse('document_type_name', 'already exists');
-      }
-
-      const documentTypeShortNameExist =
-        await this.documentTypesRepository.findOneBy({
-          document_type_short_name,
-        });
-
-      if (documentTypeShortNameExist) {
-        return conflictResponse('document_type_short_name', 'already exists');
-      }
+      await valueExistValidate(
+        this.documentTypesRepository,
+        'document_type_short_name',
+        document_type_short_name,
+      );
 
       const newDocumentType = this.documentTypesRepository.create({
         document_type_name,
@@ -197,31 +192,6 @@ export class DocumentTypesService {
       );
     } catch (error) {
       return errorResponse(error, `Error updating document type`);
-    }
-  }
-
-  /*
-    * Elimina un tipo de documento por su ID.
-    
-  > Verifica si el tipo de documento con el ID proporcionado existe antes de eliminarlo.
-  > Retorna una respuesta de éxito tras la eliminación exitosa o una respuesta de "no encontrado" si el ID no existe.
-  > Maneja posibles errores durante el proceso de eliminación.
-    */
-  async remove(id: number) {
-    try {
-      const documentType = await this.documentTypesRepository.findOneBy({
-        id_document_type: id,
-      });
-
-      if (!documentType) {
-        return notFoundResponse('id_document_type');
-      }
-
-      await this.documentTypesRepository.delete(id);
-
-      return successResponse(null, 'Document type deleted successfully');
-    } catch (error) {
-      return errorResponse(error, `Error deleting document type`);
     }
   }
 }
