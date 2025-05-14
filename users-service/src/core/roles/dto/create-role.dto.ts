@@ -1,5 +1,12 @@
+import {
+  ArrayMinSize,
+  IsArray,
+  IsInt,
+  IsString,
+  Length,
+  MinLength,
+} from 'class-validator';
 import { Transform } from 'class-transformer';
-import { IsArray, IsInt, IsString, Length, MinLength } from 'class-validator';
 
 export class CreateRoleDto {
   @IsInt()
@@ -12,5 +19,6 @@ export class CreateRoleDto {
   role_name: string;
 
   @IsArray()
-  permissions_id: readonly number[];
+  @ArrayMinSize(1)
+  permissions_id: number[];
 }

@@ -2,6 +2,7 @@ import { PartialType } from '@nestjs/mapped-types';
 import { CreateRoleDto } from './create-role.dto';
 import {
   IsArray,
+  IsIn,
   IsInt,
   IsOptional,
   IsString,
@@ -9,11 +10,13 @@ import {
   MinLength,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { rolesStatesName } from 'src/types';
 
 export class UpdateRoleDto extends PartialType(CreateRoleDto) {
   @IsOptional()
   @IsInt()
   @MinLength(1)
+  @IsIn(Object.values(rolesStatesName).map(Number))
   state_id: number;
 
   @IsOptional()

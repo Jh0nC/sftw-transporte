@@ -21,7 +21,7 @@ export class Roles {
   admin_company: AdminCompanies;
 
   @ManyToOne(() => States, (state) => state.id_state)
-  state_id: States;
+  state: States;
 
   @Column({ length: 100 })
   role_name: string;

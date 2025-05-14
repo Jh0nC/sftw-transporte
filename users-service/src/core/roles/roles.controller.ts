@@ -4,8 +4,9 @@ import {
   Post,
   Body,
   Patch,
-  Param,
   Delete,
+  Param,
+  Query,
 } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
@@ -21,8 +22,27 @@ export class RolesController {
   }
 
   @Get()
-  findAll() {
-    return this.rolesService.findAll();
+  findAll(@Query('page') page: string, @Query('limit') limit: string) {
+    const pageIndex = page ? parseInt(page, 10) : undefined;
+    const limitNumber = limit ? parseInt(limit, 10) : undefined;
+
+    return this.rolesService.findAll(pageIndex, limitNumber);
+  }
+
+  @Get('by-company/:id')
+  findAllByCompanyId(
+    @Query('page') page: string,
+    @Query('limit') limit: string,
+    @Param('id') companyId: number,
+  ) {
+    const pageIndex = page ? parseInt(page, 10) : undefined;
+    const limitNumber = limit ? parseInt(limit, 10) : undefined;
+
+    return this.rolesService.findAllByCompanyId(
+      companyId,
+      pageIndex,
+      limitNumber,
+    );
   }
 
   @Get(':id')
@@ -33,14 +53,6 @@ export class RolesController {
   @Patch(':id')
   update(@Param('id') id: number, @Body() updateRoleDto: UpdateRoleDto) {
     return this.rolesService.update(id, updateRoleDto);
-  }
-
-  @Patch('permission/:id')
-  updatePermissions(
-    @Param('id') id: number,
-    @Body() updateRoleDto: UpdateRoleDto,
-  ) {
-    return this.rolesService.updatePermissions(id, updateRoleDto)
   }
 
   @Delete(':id')

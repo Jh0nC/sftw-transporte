@@ -26,7 +26,7 @@ export class StatesService {
   > Retorna los datos del estado obtenidos del servicio externo.
   > Maneja errores durante la petición, relanzando las excepciones HttpException o lanzando una nueva excepción INTERNAL_SERVER_ERROR en caso de otros errores.
     */
-  async findOne(id: number): Promise<States | States[]> {
+  async findOne(id: number): Promise<States> {
     try {
       const response = await firstValueFrom(
         this.httpService.get(`${this.statesServiceUrl}/states/${id}`),
@@ -43,7 +43,7 @@ export class StatesService {
         );
       }
 
-      return response.data;
+      return response.data as States;
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
@@ -58,53 +58,6 @@ export class StatesService {
         {
           statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
           message: `Error retrieving state`,
-          error: error.message || String(error),
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  /*
-    * Obtiene un estado específico por su nombre desde un servicio externo.
-
-  > Realiza una petición GET al servicio de estados externo utilizando el nombre proporcionado como parámetro de consulta.
-  > Si la respuesta del servicio externo no contiene datos, lanza una excepción HttpException con un estado NOT_FOUND.
-  > Retorna los datos del estado obtenidos del servicio externo.
-  > Maneja errores durante la petición, relanzando las excepciones HttpException o lanzando una nueva excepción INTERNAL_SERVER_ERROR en caso de otros errores.
-    */
-  async findOneByName(name: string): Promise<States | States[]> {
-    try {
-      const response = await firstValueFrom(
-        this.httpService.get(`${this.statesServiceUrl}/states?name=${name}`),
-      );
-
-      if (!response?.data) {
-        throw new HttpException(
-          {
-            statusCode: HttpStatus.NOT_FOUND,
-            message: `Request data, state_name: ${name}, was not found`,
-            error: 'Not Found',
-          },
-          HttpStatus.NOT_FOUND,
-        );
-      }
-
-      return response.data;
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-
-      Logger.error(
-        'Error obtaining state',
-        error.response?.data || error.message,
-      );
-
-      throw new HttpException(
-        {
-          statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-          message: `Error retrieving state by name`,
           error: error.message || String(error),
         },
         HttpStatus.INTERNAL_SERVER_ERROR,

@@ -4,12 +4,14 @@ import { RolesController } from './roles.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Roles } from 'src/database';
 import { PermissionsModule } from 'src/core/index.module';
-import { StatesService } from 'src/integrations';
+import { AdminCompaniesService, StatesService } from 'src/integrations';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Roles]),
     forwardRef(() => PermissionsModule),
+    StatesService,
+    AdminCompaniesService
   ],
   controllers: [RolesController],
   providers: [RolesService, StatesService],
