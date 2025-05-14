@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { CompanyIdentificationType } from '../';
 
 @Entity('client_companies')
@@ -9,10 +9,9 @@ export class ClientCompanies {
   /* 
     Relation with company_identification_types
     */
-  @ManyToOne(
-    () => CompanyIdentificationType,
-    (identificationType) => identificationType.client_companies,
-  )
+  @ManyToOne(() => CompanyIdentificationType,
+    (identificationType) => identificationType.client_companies)
+  @JoinColumn()
   identification_type: CompanyIdentificationType;
 
   @Column({ length: 30 })

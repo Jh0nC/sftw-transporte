@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -24,6 +25,7 @@ export class AdminCompanies {
     Relation with states
     */
   @ManyToOne(() => States, (state) => state.id_state)
+  @JoinColumn()
   state: States;
 
   /*  

@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -21,6 +22,7 @@ export class Users {
     */
   @ManyToOne(() => DocumentTypes, 
     (documentType) => documentType.users)
+  @JoinColumn()
   document_type: DocumentTypes;
 
   @Column({ length: 30 })
@@ -30,6 +32,7 @@ export class Users {
     Relation with states
     */
   @ManyToOne(() => States, (state) => state.id_state)
+  @JoinColumn()
   state: States;
 
   @Column({ length: 150 })

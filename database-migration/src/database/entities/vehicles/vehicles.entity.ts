@@ -5,6 +5,7 @@ import {
   ManyToOne,
   OneToOne,
   ManyToMany,
+  JoinColumn,
 } from 'typeorm';
 import {
   AdminCompanies,
@@ -26,12 +27,14 @@ export class Vehicles {
     */
   @ManyToOne(() => AdminCompanies, 
     (adminCompany) => adminCompany.vehicles)
+  @JoinColumn()
   admin_company: AdminCompanies;
 
   /* 
     Relation with states
     */
   @ManyToOne(() => States, (state) => state.id_state)
+  @JoinColumn()
   state: States;
 
   /*  
@@ -39,6 +42,7 @@ export class Vehicles {
     */
   @ManyToOne(() => LoadCapacityCategories,
     (capacityCategory) => capacityCategory.vehicles)
+  @JoinColumn()
   load_capacity_category: LoadCapacityCategories;
 
   /*  
@@ -46,6 +50,7 @@ export class Vehicles {
     */
   @ManyToOne(() => LoadTypeCategories, 
     (typeCategory) => typeCategory.vehicles)
+  @JoinColumn()
   load_type_category: LoadTypeCategories;
 
   @Column({ length: 150 })

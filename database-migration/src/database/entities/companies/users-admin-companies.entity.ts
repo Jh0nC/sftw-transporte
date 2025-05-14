@@ -27,5 +27,6 @@ export class UsersAdminCompanies {
     Relation with states
     */
   @ManyToOne(() => States, (state) => state.id_state)
+  @JoinColumn()
   state: States;
 }

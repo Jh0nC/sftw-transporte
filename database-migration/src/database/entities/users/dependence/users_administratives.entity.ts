@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -15,13 +16,15 @@ export class UserAdministratives {
   /* 
     Relation with users
     */
-  @OneToMany(() => Users, (user) => user.user_administrative)
+  @ManyToOne(() => Users, (user) => user.user_administrative)
+  @JoinColumn()
   user: Users[];
 
   /* 
     Relation with states
     */
   @ManyToOne(() => States, (state) => state.id_state)
+  @JoinColumn()
   state: States;
 
   @Column({ length: 150 })

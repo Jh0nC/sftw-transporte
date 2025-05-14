@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
   ManyToOne,
@@ -18,9 +19,11 @@ export class Roles {
     */
   @ManyToOne(() => AdminCompanies, 
     (adminCompany) => adminCompany.roles)
+  @JoinColumn()
   admin_company: AdminCompanies;
 
   @ManyToOne(() => States, (state) => state.id_state)
+  @JoinColumn()
   state: States;
 
   @Column({ length: 100 })

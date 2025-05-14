@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   ManyToMany,
+  JoinColumn,
 } from 'typeorm';
 import { CompanyIdentificationType, TravelOrders } from '../';
 
@@ -17,6 +18,7 @@ export class ClientCompanies {
     */
   @ManyToOne(() => CompanyIdentificationType,
     (identificationType) => identificationType.client_companies)
+  @JoinColumn()
   identification_type: CompanyIdentificationType;
 
   @Column({ length: 30 })

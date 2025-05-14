@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   OneToOne,
+  JoinColumn,
 } from 'typeorm';
 import { TravelOrders, States, DeliveryDocuments } from '../../';
 
@@ -17,12 +18,14 @@ export class TravelStopPoints {
     */
   @ManyToOne(() => TravelOrders,
     (travelOrder) => travelOrder.travel_stop_points)
+  @JoinColumn()
   travel_order: TravelOrders;
 
   /* 
     Relation with states
     */
   @ManyToOne(() => States, (state) => state.id_state)
+  @JoinColumn()
   state: States;
 
   @Column()

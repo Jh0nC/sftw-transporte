@@ -7,6 +7,7 @@ import {
   JoinTable,
   OneToMany,
   OneToOne,
+  JoinColumn,
 } from 'typeorm';
 import {
   AdminCompanies,
@@ -30,12 +31,14 @@ export class TravelOrders {
     */
   @ManyToOne(() => AdminCompanies, 
     (adminCompany) => adminCompany.travel_orders)
+  @JoinColumn()
   admin_company: AdminCompanies;
 
   /* 
     Relation with states
     */
   @ManyToOne(() => States, (state) => state.id_state)
+  @JoinColumn()
   state: States;
 
   /* 
@@ -43,6 +46,7 @@ export class TravelOrders {
     */
   @ManyToOne(() => LoadCapacityCategories,
     (loadCapacityCategory) => loadCapacityCategory.travel_orders)
+  @JoinColumn()
   load_capacity_category: LoadCapacityCategories;
 
   /* 
@@ -50,6 +54,7 @@ export class TravelOrders {
     */
   @ManyToOne(() => LoadTypeCategories,
     (loadTypeCategory) => loadTypeCategory.travel_orders)
+  @JoinColumn()
   load_type_category: LoadTypeCategories;
 
   @Column({ type: 'datetime' })

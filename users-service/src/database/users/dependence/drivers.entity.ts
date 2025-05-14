@@ -24,6 +24,7 @@ export class Drivers {
     Relation with states
     */
   @ManyToOne(() => States, (state) => state.id_state)
+  @JoinColumn()
   state: States;
 
   @Column({ length: 30 })

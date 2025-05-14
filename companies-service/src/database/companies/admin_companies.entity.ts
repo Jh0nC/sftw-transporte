@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -21,6 +22,7 @@ export class AdminCompanies {
     Relation with states
     */
   @ManyToOne(() => States, (state) => state.id_state)
+  @JoinColumn()
   state: States;
 
   /*  
@@ -28,6 +30,7 @@ export class AdminCompanies {
     */
   @ManyToOne(() => CompanyIdentificationType,
     (identificationType) => identificationType.admin_companies)
+  @JoinColumn()
   identification_type: CompanyIdentificationType;
 
   @Column({ length: 30 })
@@ -53,6 +56,7 @@ export class AdminCompanies {
     */
   @ManyToOne(() => DocumentTypes,
     (documentType) => documentType.admin_companies)
+  @JoinColumn()
   representative_document_type: DocumentTypes;
 
   @Column({ length: 30 })
