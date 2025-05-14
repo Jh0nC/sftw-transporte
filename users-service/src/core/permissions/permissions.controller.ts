@@ -40,7 +40,14 @@ export class PermissionsController {
     @Query('page') page: string,
     @Query('limit') limit: string,
   ) {
-    return this.permissionsService.findRolesWithPermission(id);
+    const pageIndex = page ? parseInt(page, 10) : undefined;
+    const limitNumber = limit ? parseInt(limit, 10) : undefined;
+
+    return this.permissionsService.findRolesWithPermission(
+      id,
+      pageIndex,
+      limitNumber,
+    );
   }
 
   @Patch(':id')

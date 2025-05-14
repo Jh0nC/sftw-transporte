@@ -10,22 +10,29 @@ import {
   errorResponse,
   notFoundResponse,
   successResponse,
-} from '../../utils';
+  valueExistValidate,
+} from 'src/utils';
+import { StatesService } from 'src/integrations';
 
 @Injectable()
 export class PermissionsService {
   constructor(
     @InjectRepository(Permissions)
     private readonly permissionsRepository: Repository<Permissions>,
+
+    private readonly statesServiceService: StatesService,
   ) {}
 
   /*
-    * Crea un nuevo permiso.
+  * Crea un nuevo permiso.
 
-  > Verifica si ya existe un permiso con el nombre proporcionado antes de crearlo.
-  > Retorna una respuesta de éxito con el nuevo permiso o una respuesta de conflicto si el nombre ya existe.
-  > Maneja posibles errores durante el proceso de creación.
-    */
+    > Verifica si ya existe un permiso con el nombre proporcionado antes de crearlo.
+    > Obtiene el estado activo por defecto para el permiso.
+    > Crea un nuevo permiso con el nombre, descripción y estado activo por defecto.
+    > Guarda el nuevo permiso en la base de datos.
+    > Retorna una respuesta de éxito con el nuevo permiso o una respuesta de conflicto si el nombre ya existe.
+    > Maneja posibles errores durante el proceso de creación.
+      */
   async create(createPermissionDto: CreatePermissionDto) {
     try {
       const { permission_name, description } = createPermissionDto;
@@ -38,9 +45,20 @@ export class PermissionsService {
         return conflictResponse('permission_name', 'already exists');
       }
 
+      /* Valor activo por defecto */
+      const defaultState = await this.statesServiceService.findOne(
+        /*  
+        * Estados disponibles para permissions
+          > per_active        :id=9
+          > per_inactive      :id=10
+          */
+        9,
+      );
+
       const newPermission = this.permissionsRepository.create({
         permission_name,
         description,
+        state: defaultState,
       });
 
       await this.permissionsRepository.save(newPermission);
@@ -161,13 +179,15 @@ export class PermissionsService {
   }
 
   /*
-    * Actualiza un permiso existente.
+  * Actualiza un permiso existente.
 
-  > Verifica si el permiso con el ID proporcionado existe.
-  > **Verifica si al menos uno de los campos (nombre o descripción) está definido en los datos de actualización para evitar una actualización innecesaria.**
-  > Si se proporciona un nuevo nombre de permiso, verifica si ya existe un permiso con ese nombre (excluyendo el permiso actual que se está actualizando).
-  > Retorna una respuesta de éxito con el permiso actualizado o una respuesta de "no encontrado" o "conflicto" según sea necesario.
-  > Maneja posibles errores durante el proceso de actualización.
+    > Verifica si el permiso con el ID proporcionado existe.
+    > **Verifica si al menos uno de los campos (nombre, descripción o state_id) está definido en los datos de actualización para evitar una actualización innecesaria.**
+    > Si se proporciona un nuevo nombre de permiso, verifica si ya existe un permiso con ese nombre (excluyendo el permiso actual que se está actualizando).
+    > Si se proporciona un `state_id`, busca y asigna el estado correspondiente.
+    > Actualiza el nombre, la descripción y/o el estado del permiso si se proporcionan en el DTO.
+    > Retorna una respuesta de éxito con el permiso actualizado o una respuesta de "no encontrado" o "conflicto" según sea necesario.
+    > Maneja posibles errores durante el proceso de actualización.
     */
   async update(id: number, updatePermissionDto: UpdatePermissionDto) {
     try {
@@ -179,26 +199,39 @@ export class PermissionsService {
         return notFoundResponse('id_permission');
       }
 
-      const { permission_name, description } = updatePermissionDto; // ! Esta respuesta parece estar incompleta o no definida. Revisar la función 'emptyDataResponse'.
+      const { permission_name, description, state_id } = updatePermissionDto;
 
-      if (!permission_name && !description) {
-        emptyDataResponse([permission_name, description]);
+      if (!permission_name && !description && state_id === undefined) {
+        emptyDataResponse([permission_name, description, state_id]);
       }
 
-      if (permission_name) {
-        const permissionNameExist = await this.permissionsRepository.findOneBy({
-          permission_name,
-        });
+      const updateData: Partial<Permissions> = {};
 
-        if (permissionNameExist && permissionNameExist.id_permission !== id) {
-          return conflictResponse('permission_name', 'already exists');
+      if (permission_name) {
+        await valueExistValidate(
+          this.permissionsRepository,
+          'permission_name',
+          permission_name,
+        );
+
+        updateData.permission_name = permission_name;
+      }
+
+      if (description) {
+        updateData.description = description;
+      }
+
+      if (state_id !== undefined) {
+        const newState = await this.statesServiceService.findOne(state_id);
+
+        if (newState) {
+          updateData.state = newState;
+        } else {
+          return notFoundResponse('state_id');
         }
       }
 
-      await this.permissionsRepository.update(id, {
-        permission_name,
-        description,
-      });
+      await this.permissionsRepository.update(id, updateData);
 
       const updatedPermission = await this.permissionsRepository.findOneBy({
         id_permission: id,
@@ -214,20 +247,30 @@ export class PermissionsService {
   }
 
   /*
-    * Elimina un permiso por su ID.
+  * Elimina un permiso por su ID.
 
-  > Verifica si el permiso con el ID proporcionado existe antes de eliminarlo.
-  > Retorna una respuesta de éxito tras la eliminación exitosa o una respuesta de "no encontrado" si el ID no existe.
-  > Maneja posibles errores durante el proceso de eliminación.
+    > Verifica si el permiso con el ID proporcionado existe.
+    > **Valida si el permiso está asociado a algún rol. Si lo está, no se puede eliminar y se retorna una respuesta de conflicto.**
+    > Si el permiso no está asociado a ningún rol, se elimina de la base de datos.
+    > Retorna una respuesta de éxito tras la eliminación o una respuesta de "no encontrado" o "conflicto" según sea necesario.
+    > Maneja posibles errores durante el proceso de eliminación.
     */
   async remove(id: number) {
     try {
-      const permission = await this.permissionsRepository.findOneBy({
-        id_permission: id,
+      const permission = await this.permissionsRepository.findOne({
+        where: { id_permission: id },
+        relations: ['roles'],
       });
 
       if (!permission) {
         return notFoundResponse('id_permission');
+      }
+
+      if (permission.roles && permission.roles.length > 0) {
+        return conflictResponse(
+          'permission',
+          'is associated with one or more roles and cannot be deleted',
+        );
       }
 
       await this.permissionsRepository.delete(id);
