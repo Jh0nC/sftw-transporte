@@ -20,18 +20,18 @@ export class PermissionsService {
     @InjectRepository(Permissions)
     private readonly permissionsRepository: Repository<Permissions>,
 
-    private readonly statesServiceService: StatesService,
+    private readonly statesService: StatesService,
   ) {}
 
   /*
-  * Crea un nuevo permiso.
+    * Crea un nuevo permiso.
 
-    > Verifica si ya existe un permiso con el nombre proporcionado antes de crearlo.
-    > Obtiene el estado activo por defecto para el permiso.
-    > Crea un nuevo permiso con el nombre, descripción y estado activo por defecto.
-    > Guarda el nuevo permiso en la base de datos.
-    > Retorna una respuesta de éxito con el nuevo permiso o una respuesta de conflicto si el nombre ya existe.
-    > Maneja posibles errores durante el proceso de creación.
+  > Verifica si ya existe un permiso con el nombre proporcionado antes de crearlo.
+  > Obtiene el estado activo por defecto para el permiso.
+  > Crea un nuevo permiso con el nombre, descripción y estado activo por defecto.
+  > Guarda el nuevo permiso en la base de datos.
+  > Retorna una respuesta de éxito con el nuevo permiso o una respuesta de conflicto si el nombre ya existe.
+  > Maneja posibles errores durante el proceso de creación.
       */
   async create(createPermissionDto: CreatePermissionDto) {
     try {
@@ -46,7 +46,7 @@ export class PermissionsService {
       }
 
       /* Valor activo por defecto */
-      const defaultState = await this.statesServiceService.findOne(
+      const defaultState = await this.statesService.findOne(
         /*  
         * Estados disponibles para permissions
           > per_active        :id=9
@@ -130,13 +130,13 @@ export class PermissionsService {
   }
 
   /*
-  * Obtiene todos los roles que tienen asignado un permiso específico con soporte para paginación opcional.
+    * Obtiene todos los roles que tienen asignado un permiso específico con soporte para paginación opcional.
 
-    > Busca el permiso por su ID, incluyendo la relación con la tabla de roles.
-    > Si no se proporcionan `pageIndex` o `limitNumber`, retorna todos los roles asociados al permiso.
-    > Si se proporcionan `pageIndex` y `limitNumber`, realiza la paginación de los roles asociados al permiso.
-    > Retorna una respuesta de éxito con un array de roles (paginados o no) que tienen el permiso asignado o una respuesta de "no encontrado" si el ID del permiso no existe. Si se pagina, incluye los datos de los roles y el total de roles.
-    > Maneja posibles errores durante el proceso de obtención.
+  > Busca el permiso por su ID, incluyendo la relación con la tabla de roles.
+  > Si no se proporcionan `pageIndex` o `limitNumber`, retorna todos los roles asociados al permiso.
+  > Si se proporcionan `pageIndex` y `limitNumber`, realiza la paginación de los roles asociados al permiso.
+  > Retorna una respuesta de éxito con un array de roles (paginados o no) que tienen el permiso asignado o una respuesta de "no encontrado" si el ID del permiso no existe. Si se pagina, incluye los datos de los roles y el total de roles.
+  > Maneja posibles errores durante el proceso de obtención.
     */
   async findRolesWithPermission(
     id: number,
@@ -179,15 +179,15 @@ export class PermissionsService {
   }
 
   /*
-  * Actualiza un permiso existente.
+    * Actualiza un permiso existente.
 
-    > Verifica si el permiso con el ID proporcionado existe.
-    > **Verifica si al menos uno de los campos (nombre, descripción o state_id) está definido en los datos de actualización para evitar una actualización innecesaria.**
-    > Si se proporciona un nuevo nombre de permiso, verifica si ya existe un permiso con ese nombre (excluyendo el permiso actual que se está actualizando).
-    > Si se proporciona un `state_id`, busca y asigna el estado correspondiente.
-    > Actualiza el nombre, la descripción y/o el estado del permiso si se proporcionan en el DTO.
-    > Retorna una respuesta de éxito con el permiso actualizado o una respuesta de "no encontrado" o "conflicto" según sea necesario.
-    > Maneja posibles errores durante el proceso de actualización.
+  > Verifica si el permiso con el ID proporcionado existe.
+  > **Verifica si al menos uno de los campos (nombre, descripción o state_id) está definido en los datos de actualización para evitar una actualización innecesaria.**
+  > Si se proporciona un nuevo nombre de permiso, verifica si ya existe un permiso con ese nombre (excluyendo el permiso actual que se está actualizando).
+  > Si se proporciona un `state_id`, busca y asigna el estado correspondiente.
+  > Actualiza el nombre, la descripción y/o el estado del permiso si se proporcionan en el DTO.
+  > Retorna una respuesta de éxito con el permiso actualizado o una respuesta de "no encontrado" o "conflicto" según sea necesario.
+  > Maneja posibles errores durante el proceso de actualización.
     */
   async update(id: number, updatePermissionDto: UpdatePermissionDto) {
     try {
@@ -207,28 +207,22 @@ export class PermissionsService {
 
       const updateData: Partial<Permissions> = {};
 
-      if (permission_name) {
-        await valueExistValidate(
-          this.permissionsRepository,
-          'permission_name',
-          permission_name,
-        );
+      await valueExistValidate(
+        this.permissionsRepository,
+        'permission_name',
+        permission_name,
+      );
 
-        updateData.permission_name = permission_name;
-      }
+      updateData.permission_name = permission_name;
 
-      if (description) {
-        updateData.description = description;
-      }
+      updateData.description = description;
 
-      if (state_id !== undefined) {
-        const newState = await this.statesServiceService.findOne(state_id);
+      const newState = await this.statesService.findOne(state_id);
 
-        if (newState) {
-          updateData.state = newState;
-        } else {
-          return notFoundResponse('state_id');
-        }
+      if (newState) {
+        updateData.state = newState;
+      } else {
+        return notFoundResponse('state_id');
       }
 
       await this.permissionsRepository.update(id, updateData);
@@ -247,13 +241,13 @@ export class PermissionsService {
   }
 
   /*
-  * Elimina un permiso por su ID.
+    * Elimina un permiso por su ID.
 
-    > Verifica si el permiso con el ID proporcionado existe.
-    > **Valida si el permiso está asociado a algún rol. Si lo está, no se puede eliminar y se retorna una respuesta de conflicto.**
-    > Si el permiso no está asociado a ningún rol, se elimina de la base de datos.
-    > Retorna una respuesta de éxito tras la eliminación o una respuesta de "no encontrado" o "conflicto" según sea necesario.
-    > Maneja posibles errores durante el proceso de eliminación.
+  > Verifica si el permiso con el ID proporcionado existe.
+  > **Valida si el permiso está asociado a algún rol. Si lo está, no se puede eliminar y se retorna una respuesta de conflicto.**
+  > Si el permiso no está asociado a ningún rol, se elimina de la base de datos.
+  > Retorna una respuesta de éxito tras la eliminación o una respuesta de "no encontrado" o "conflicto" según sea necesario.
+  > Maneja posibles errores durante el proceso de eliminación.
     */
   async remove(id: number) {
     try {
