@@ -12,6 +12,7 @@ interface EnvVariables {
   DB_PASSWORD: string;
 
   STATES_SERVICE_URL: string;
+  COMPANIES_SERVICE_URL: string;
 
   // ... other variables
 }
@@ -33,6 +34,7 @@ const envVariablesSchema = joi
     DB_PASSWORD: joi.string().required(),
 
     STATES_SERVICE_URL: joi.string().required(),
+    COMPANIES_SERVICE_URL: joi.string().required(),
 
     // ... other variables
   })
@@ -71,6 +73,7 @@ export const envVariables = {
   dbPassword: env.DB_PASSWORD,
 
   statesServiceUrl: env.STATES_SERVICE_URL,
+  companiesServiceUrl: env.COMPANIES_SERVICE_URL,
 
   // ... other variables
 };
