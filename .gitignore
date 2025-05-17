@@ -24,3 +24,5 @@
 # temp directory
 **/*/.temp
 **/*/.tmp
+**/*/.tmp.driveupload
+/.tmp.driveupload
