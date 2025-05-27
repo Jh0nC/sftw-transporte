@@ -18,14 +18,14 @@ export class VehicleDocuments {
     */
   @OneToOne(() => Vehicles, 
     (vehicle) => vehicle.vehicle_documents)
-  @JoinColumn()
+  @JoinColumn({ name: 'vehicle'})
   vehicle: Vehicles;
 
   /* 
     Relation with states
     */
   @ManyToOne(() => States, (state) => state.id_state)
-  @JoinColumn()
+  @JoinColumn({ name: 'state'})
   state: States;
 
   @Column({ length: 10 })

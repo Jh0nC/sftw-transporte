@@ -12,7 +12,7 @@ export class UsersAdminCompanies {
     Transaccional relation with users
     */
   @ManyToOne(() => Users, (user) => user.user_admin_company)
-  @JoinColumn()
+  @JoinColumn({ name: 'user'})
   user: Users[];
 
   /* 
@@ -20,13 +20,13 @@ export class UsersAdminCompanies {
     */
   @ManyToOne(() => AdminCompanies,
     (adminCompany) => adminCompany.user_admin_company)
-  @JoinColumn()
+  @JoinColumn({ name: 'admin_companies'})
   admin_companies: AdminCompanies[];
 
   /* 
     Relation with states
     */
   @ManyToOne(() => States, (state) => state.id_state)
-  @JoinColumn()
+  @JoinColumn({ name: 'state'})
   state: States;
 }

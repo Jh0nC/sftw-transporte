@@ -19,14 +19,14 @@ export class Drivers {
     Relation with user
     */
   @OneToOne(() => Users, (user) => user.driver)
-  @JoinColumn()
+  @JoinColumn({ name: 'user'})
   user: Users;
 
   /* 
     Relation with states
     */
   @ManyToOne(() => States, (state) => state.id_state)
-  @JoinColumn()
+  @JoinColumn({ name: 'state'})
   state: States;
 
   @Column({ length: 30 })

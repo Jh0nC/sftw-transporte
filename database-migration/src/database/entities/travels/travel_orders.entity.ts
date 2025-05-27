@@ -31,14 +31,14 @@ export class TravelOrders {
     */
   @ManyToOne(() => AdminCompanies, 
     (adminCompany) => adminCompany.travel_orders)
-  @JoinColumn()
+  @JoinColumn({ name: 'admin_company'})
   admin_company: AdminCompanies;
 
   /* 
     Relation with states
     */
   @ManyToOne(() => States, (state) => state.id_state)
-  @JoinColumn()
+  @JoinColumn({ name: 'state'})
   state: States;
 
   /* 
@@ -46,7 +46,7 @@ export class TravelOrders {
     */
   @ManyToOne(() => LoadCapacityCategories,
     (loadCapacityCategory) => loadCapacityCategory.travel_orders)
-  @JoinColumn()
+  @JoinColumn({ name: 'load_capacity_category'})
   load_capacity_category: LoadCapacityCategories;
 
   /* 
@@ -54,7 +54,7 @@ export class TravelOrders {
     */
   @ManyToOne(() => LoadTypeCategories,
     (loadTypeCategory) => loadTypeCategory.travel_orders)
-  @JoinColumn()
+  @JoinColumn({ name: 'load_type_category'})
   load_type_category: LoadTypeCategories;
 
   @Column({ type: 'datetime' })

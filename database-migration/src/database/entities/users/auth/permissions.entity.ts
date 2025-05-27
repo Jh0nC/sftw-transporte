@@ -17,7 +17,7 @@ export class Permissions {
     Relation with states
     */
   @ManyToOne(() => States, (state) => state.id_state)
-  @JoinColumn()
+  @JoinColumn({ name: 'state'})
   state: States;
 
   @Column({ length: 150 })

@@ -19,17 +19,17 @@ export class Roles {
     */
   @ManyToOne(() => AdminCompanies, 
     (adminCompany) => adminCompany.roles)
-  @JoinColumn()
+  @JoinColumn({ name: 'admin_company' })
   admin_company: AdminCompanies;
 
   @ManyToOne(() => States, (state) => state.id_state)
-  @JoinColumn()
+  @JoinColumn({ name: 'state'})
   state: States;
 
   @Column({ length: 100 })
   role_name: string;
 
-//>---------------------------------------------------------------->
+  //>---------------------------------------------------------------->
   /*
   * TypeORM transactional auto-created tables
     

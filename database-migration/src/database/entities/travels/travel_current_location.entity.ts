@@ -17,7 +17,7 @@ export class TravelCurrentLocation {
     */
   @OneToOne(() => TravelOrders,
     (travelOrder) => travelOrder.travel_current_location)
-  @JoinColumn()
+  @JoinColumn({ name: 'travel_order'})
   travel_order: TravelOrders;
 
   @Column({ length: 255 })

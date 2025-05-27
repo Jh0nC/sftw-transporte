@@ -17,7 +17,7 @@ export class TravelNews {
     */
   @ManyToOne(() => TravelOrders, 
     (travelOrder) => travelOrder.travel_news)
-  @JoinColumn()
+  @JoinColumn({ name: 'travel_order'})
   travel_order: TravelOrders;
 
   @Column({ length: 255 })

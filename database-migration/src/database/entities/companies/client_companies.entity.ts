@@ -18,7 +18,7 @@ export class ClientCompanies {
     */
   @ManyToOne(() => CompanyIdentificationType,
     (identificationType) => identificationType.client_companies)
-  @JoinColumn()
+  @JoinColumn({ name: 'identification_type'})
   identification_type: CompanyIdentificationType;
 
   @Column({ length: 30 })

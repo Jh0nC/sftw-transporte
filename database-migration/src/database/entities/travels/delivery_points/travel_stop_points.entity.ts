@@ -18,14 +18,14 @@ export class TravelStopPoints {
     */
   @ManyToOne(() => TravelOrders,
     (travelOrder) => travelOrder.travel_stop_points)
-  @JoinColumn()
+  @JoinColumn({ name: 'travel_order'})
   travel_order: TravelOrders;
 
   /* 
     Relation with states
     */
   @ManyToOne(() => States, (state) => state.id_state)
-  @JoinColumn()
+  @JoinColumn({ name: 'state'})
   state: States;
 
   @Column()

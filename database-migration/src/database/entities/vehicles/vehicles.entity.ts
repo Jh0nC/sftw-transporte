@@ -27,14 +27,14 @@ export class Vehicles {
     */
   @ManyToOne(() => AdminCompanies, 
     (adminCompany) => adminCompany.vehicles)
-  @JoinColumn()
+  @JoinColumn({ name: 'admin_company'})
   admin_company: AdminCompanies;
 
   /* 
     Relation with states
     */
   @ManyToOne(() => States, (state) => state.id_state)
-  @JoinColumn()
+  @JoinColumn({ name: 'state'})
   state: States;
 
   /*  
@@ -42,7 +42,7 @@ export class Vehicles {
     */
   @ManyToOne(() => LoadCapacityCategories,
     (capacityCategory) => capacityCategory.vehicles)
-  @JoinColumn()
+  @JoinColumn({ name: 'load_capacity_category'})
   load_capacity_category: LoadCapacityCategories;
 
   /*  
@@ -50,7 +50,7 @@ export class Vehicles {
     */
   @ManyToOne(() => LoadTypeCategories, 
     (typeCategory) => typeCategory.vehicles)
-  @JoinColumn()
+  @JoinColumn({ name: 'load_type_category'})
   load_type_category: LoadTypeCategories;
 
   @Column({ length: 150 })

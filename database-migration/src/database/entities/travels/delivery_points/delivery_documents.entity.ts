@@ -17,7 +17,7 @@ export class DeliveryDocuments {
     */
   @OneToOne(() => TravelStopPoints,
     (travelStopPoint) => travelStopPoint.delivery_documents)
-  @JoinColumn()
+  @JoinColumn({ name: 'travel_stop_point'})
   travel_stop_point: TravelStopPoints;
 
   @Column({ length: 255 })

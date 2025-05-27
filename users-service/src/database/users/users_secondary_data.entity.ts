@@ -16,7 +16,7 @@ export class UsersSecondaryData {
     Relation with user
     */
   @OneToOne(() => Users, (user) => user.user_secondary_data)
-  @JoinColumn()
+  @JoinColumn({ name: 'user'})
   user: Users;
 
   @Column({ type: 'date' })

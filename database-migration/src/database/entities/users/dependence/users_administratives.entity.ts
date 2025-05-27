@@ -3,7 +3,6 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { States, Users } from '../..';
@@ -17,14 +16,14 @@ export class UserAdministratives {
     Relation with users
     */
   @ManyToOne(() => Users, (user) => user.user_administrative)
-  @JoinColumn()
+  @JoinColumn({ name: 'user'})
   user: Users[];
 
   /* 
     Relation with states
     */
   @ManyToOne(() => States, (state) => state.id_state)
-  @JoinColumn()
+  @JoinColumn({ name: 'state'})
   state: States;
 
   @Column({ length: 150 })

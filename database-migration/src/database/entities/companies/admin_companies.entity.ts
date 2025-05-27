@@ -19,13 +19,13 @@ import {
 @Entity('admin_companies')
 export class AdminCompanies {
   @PrimaryGeneratedColumn()
-  id_admin_companie: number;
+  id_admin_company: number;
 
   /* 
     Relation with states
     */
   @ManyToOne(() => States, (state) => state.id_state)
-  @JoinColumn()
+  @JoinColumn({ name: 'state'})
   state: States;
 
   /*  
@@ -33,7 +33,7 @@ export class AdminCompanies {
     */
   @ManyToOne(() => CompanyIdentificationType,
     (identificationType) => identificationType.admin_companies)
-  @JoinColumn()
+  @JoinColumn({ name: 'identification_type'})
   identification_type: CompanyIdentificationType;
 
   @Column({ length: 30 })
@@ -59,7 +59,7 @@ export class AdminCompanies {
     */
   @ManyToOne(() => DocumentTypes,
     (documentType) => documentType.admin_companies)
-  @JoinColumn()
+  @JoinColumn({ name: 'representative_document_type'})
   representative_document_type: DocumentTypes;
 
   @Column({ length: 30 })

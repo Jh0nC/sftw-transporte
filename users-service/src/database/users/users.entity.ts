@@ -29,7 +29,7 @@ export class Users {
     */
   @ManyToOne(() => DocumentTypes, 
     (documentType) => documentType.users)
-  @JoinColumn()
+  @JoinColumn({ name: 'document_type'})
   document_type: DocumentTypes;
 
   @Column({ length: 30 })
@@ -39,7 +39,7 @@ export class Users {
     Relation with states
     */
   @ManyToOne(() => States, (state) => state.id_state)
-  @JoinColumn()
+  @JoinColumn({ name: 'state'})
   state: States;
 
   @Column({ length: 150 })
