@@ -24,5 +24,9 @@
 # temp directory
 **/*/.temp
 **/*/.tmp
+
+# Google drive files -> for backup
 **/*/.tmp.driveupload
+**/*/.tmp.drivedownload
 /.tmp.driveupload
+/.tmp.drivedownload
