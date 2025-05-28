@@ -1,46 +1,34 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Delete,
-  Put,
-  Query,
-} from '@nestjs/common';
-import { StatesService } from './states.service';
-import { CreateStateDto } from './dto/create-state.dto';
+import { Controller, Body, Param, Query, Get, Put } from '@nestjs/common';
 import { UpdateStateDto } from './dto/update-state.dto';
+import {
+  FindAllStatesService,
+  FindOneStateService,
+  UpdateStateService,
+} from './service/index.service';
 
 @Controller('states')
 export class StatesController {
-  constructor(private readonly statesService: StatesService) {}
-
-  @Post()
-  create(@Body() createStateDto: CreateStateDto) {
-    return this.statesService.create(createStateDto);
-  }
+  constructor(
+    private readonly findAllStates: FindAllStatesService,
+    private readonly findOneState: FindOneStateService,
+    private readonly updateState: UpdateStateService,
+  ) {}
 
   @Get()
   findAll(@Query('page') page: string, @Query('limit') limit: string) {
     const pageIndex = page ? parseInt(page, 10) : undefined;
     const limitNumber = limit ? parseInt(limit, 10) : undefined;
 
-    return this.statesService.findAll(pageIndex, limitNumber);
+    return this.findAllStates.exec(pageIndex, limitNumber);
   }
 
   @Get(':id')
   findOne(@Param('id') id: number) {
-    return this.statesService.findOne(id);
+    return this.findOneState.exec(id);
   }
 
   @Put(':id')
   update(@Param('id') id: number, @Body() updateStateDto: UpdateStateDto) {
-    return this.statesService.update(id, updateStateDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.statesService.remove(id);
+    return this.updateState.exec(id, updateStateDto);
   }
 }
