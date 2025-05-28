@@ -3,22 +3,34 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
-  Delete,
   Query,
+  Put,
+  Delete,
 } from '@nestjs/common';
-import { DocumentTypesService } from './document-types.service';
 import { CreateDocumentTypeDto } from './dto/create-document_type.dto';
 import { UpdateDocumentTypeDto } from './dto/update-document_type.dto';
+import {
+  CreateDocumentTypeService,
+  FindAllDocumentTypesService,
+  FindOneDocumentTypeService,
+  UpdateDocumentTypeService,
+  DeleteDocumentTypeService,
+} from './service';
 
 @Controller('document-types')
 export class DocumentTypesController {
-  constructor(private readonly documentTypesService: DocumentTypesService) {}
+  constructor(
+    private readonly createDocumentType: CreateDocumentTypeService,
+    private readonly findAllDocumentTypes: FindAllDocumentTypesService,
+    private readonly findOneDocumentType: FindOneDocumentTypeService,
+    private readonly updateDocumentType: UpdateDocumentTypeService,
+    private readonly deleteDocumentType: DeleteDocumentTypeService,
+  ) {}
 
   @Post()
   create(@Body() createDocumentTypeDto: CreateDocumentTypeDto) {
-    return this.documentTypesService.create(createDocumentTypeDto);
+    return this.createDocumentType.exec(createDocumentTypeDto);
   }
 
   @Get()
@@ -26,19 +38,24 @@ export class DocumentTypesController {
     const pageIndex = page ? parseInt(page, 10) : undefined;
     const limitNumber = limit ? parseInt(limit, 10) : undefined;
 
-    return this.documentTypesService.findAll(pageIndex, limitNumber);
+    return this.findAllDocumentTypes.exec(pageIndex, limitNumber);
   }
 
   @Get(':id')
   findOne(@Param('id') id: number) {
-    return this.documentTypesService.findOne(id);
+    return this.findOneDocumentType.exec(id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(
     @Param('id') id: number,
     @Body() updateDocumentTypeDto: UpdateDocumentTypeDto,
   ) {
-    return this.documentTypesService.update(id, updateDocumentTypeDto);
+    return this.updateDocumentType.exec(id, updateDocumentTypeDto);
+  }
+
+  @Delete(':id')
+  delete(@Param('id') id: number) {
+    return this.deleteDocumentType.exec(id);
   }
 }
