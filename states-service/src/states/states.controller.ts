@@ -4,7 +4,7 @@ import {
   FindAllStatesService,
   FindOneStateService,
   UpdateStateService,
-} from './service/index.service';
+} from './service';
 
 @Controller('states')
 export class StatesController {

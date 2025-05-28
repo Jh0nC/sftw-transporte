@@ -28,7 +28,7 @@ export class FindAllStatesService {
         return { data: states, total };
       }
     } catch (error) {
-      return errorResponse(error, 'Error retrieving states');
+      errorResponse(error, 'Error retrieving states');
     }
   }
 

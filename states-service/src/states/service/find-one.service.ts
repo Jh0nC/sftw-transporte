@@ -16,11 +16,11 @@ export class FindOneStateService {
       const state = await this.statesRepository.findOneBy({ id_state: id });
 
       if (!state) {
-        return notFoundResponse('id_state');
+        notFoundResponse('id_state');
       }
       return state;
     } catch (error) {
-      return errorResponse(error, `Error retrieving state`);
+      errorResponse(error, `Error retrieving state`);
     }
   }
 

@@ -16,7 +16,7 @@ export class UpdateStateService {
     try {
       const state = await this.statesRepository.findOneBy({ id_state: id });
       if (!state) {
-        return notFoundResponse('id_state');
+        notFoundResponse('id_state');
       }
 
       if (updateStateDto.state_name) {
@@ -25,7 +25,7 @@ export class UpdateStateService {
         });
 
         if (stateNameExist && stateNameExist.id_state !== id) {
-          return conflictResponse('state_name', 'already exist');
+          conflictResponse('state_name', 'already exist');
         }
       }
 
@@ -37,7 +37,7 @@ export class UpdateStateService {
 
       return updatedState;
     } catch (error) {
-      return errorResponse(error, `Error updating state`);
+      errorResponse(error, `Error updating state`);
     }
   }
 
