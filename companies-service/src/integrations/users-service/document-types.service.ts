@@ -1,61 +1,67 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
-import { envVariables } from 'src/config';
-import { firstValueFrom } from 'rxjs';
+import { catchError, firstValueFrom, throwError } from 'rxjs';
 import { DocumentTypes } from 'src/database';
-import { errorResponse, notFoundResponse } from 'src/utils';
+import { BaseIntegrationService } from '../base-integration.service';
+import { AxiosError } from 'axios';
+import { ExternalServiceErrorData } from 'src/types';
+import { conflictResponse, errorResponse, notFoundResponse } from 'src/utils';
 
 @Injectable()
-export class UsersService {
-  private readonly usersServiceUrl: string;
-
-  /*
-    * Inicializa la URL del servicio de estados.
-
-  > Lee la URL desde las variables de entorno.
-  > Se salta la validación de la variable de entorno definida ya que en el procesado ya se toma en cuenta y no se inicia si no esta
-    */
-  constructor(private readonly httpService: HttpService) {
-    this.usersServiceUrl = envVariables.usersServiceUrl;
+export class DocumentTypesService extends BaseIntegrationService {
+  constructor(httpService: HttpService) {
+    super(httpService, 'usersServiceUrl', 'Document Types External Service');
   }
 
-  /*
-    * Obtiene un estado específico por su ID desde un servicio externo.
-
-  > Realiza una petición GET al servicio de usuarios/document-types externo utilizando el ID proporcionado.
-  > Si la respuesta del servicio externo no contiene datos, lanza una excepción HttpException con un estado NOT_FOUND.
-  > Retorna los datos del document_type obtenidos del servicio externo.
-  > Maneja errores durante la petición.
-    */
-  async findDocumentTypeById(
-    id: number,
-  ): Promise<DocumentTypes | DocumentTypes[]> {
+  async findOne(id: number): Promise<DocumentTypes | undefined> {
     try {
+      const url = `${this.baseUrl}/document-types/${id}`;
+
       const response = await firstValueFrom(
-        this.httpService.get(`${this.usersServiceUrl}/document-types/${id}`),
+        this.httpService.get<DocumentTypes>(url).pipe(
+          catchError((axiosError: AxiosError<ExternalServiceErrorData>) => {
+            Logger.error(
+              `Error calling ${this.serviceName} [${url}]`,
+              axiosError.response?.data || axiosError.message,
+              this.serviceName,
+            );
+
+            if (axiosError.response?.status === HttpStatus.NOT_FOUND) {
+              notFoundResponse(`id_document_type: ${id}`);
+            }
+
+            if (axiosError.response?.status === HttpStatus.CONFLICT) {
+              const { attribute, conflict, message } =
+                axiosError.response?.data || {};
+              conflictResponse(attribute, conflict, message);
+            }
+
+            return throwError(() =>
+              errorResponse(
+                axiosError,
+                `Error retrieving document types from ${this.serviceName}: ${this.httpService}`,
+              ),
+            );
+          }),
+        ),
       );
 
-      if (!response?.data) {
-        throw new HttpException(
-          notFoundResponse('id_document_type'),
-          HttpStatus.NOT_FOUND,
-        );
+      if (response?.data == undefined || response?.data == null) {
+        notFoundResponse(`id_document_type: ${id}`);
       }
 
       return response.data;
     } catch (error) {
-      if (error instanceof HttpException) {
+      if (
+        error instanceof HttpException ||
+        (error instanceof AxiosError && error.response?.status)
+      ) {
         throw error;
       }
 
-      Logger.error(
-        'Error obtaining document_type',
-        error.response?.data || error.message,
-      );
-
-      throw new HttpException(
-        errorResponse(error, 'Error retrieving document type'),
-        HttpStatus.INTERNAL_SERVER_ERROR,
+      errorResponse(
+        error,
+        'Unexpected error in AdminCompaniesService external call',
       );
     }
   }

@@ -1,21 +1,18 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { CompanyIdentificationTypesService } from './company-identification-types.service';
+import * as CompanyIdentificationTypesService from './services';
 import { CompanyIdentificationTypesController } from './company-identification-types.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DocumentTypes } from 'src/database';
-import {
-  AdminCompaniesModule,
-  ClientCompaniesModule,
-} from 'src/core/index.module';
+import { CompanyIdentificationType } from 'src/database';
+import { AdminCompaniesModule, ClientCompaniesModule } from 'src/core';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([DocumentTypes]),
+    TypeOrmModule.forFeature([CompanyIdentificationType]),
     forwardRef(() => AdminCompaniesModule),
     forwardRef(() => ClientCompaniesModule),
   ],
   controllers: [CompanyIdentificationTypesController],
-  providers: [CompanyIdentificationTypesService],
+  providers: [...Object.values(CompanyIdentificationTypesService)],
   exports: [TypeOrmModule],
 })
 export class CompanyIdentificationTypesModule {}

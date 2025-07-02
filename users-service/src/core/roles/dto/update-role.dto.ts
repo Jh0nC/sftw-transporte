@@ -5,9 +5,9 @@ import {
   IsIn,
   IsInt,
   IsOptional,
+  IsPositive,
   IsString,
   Length,
-  MinLength,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { rolesStatesName } from 'src/types';
@@ -15,7 +15,7 @@ import { rolesStatesName } from 'src/types';
 export class UpdateRoleDto extends PartialType(CreateRoleDto) {
   @IsOptional()
   @IsInt()
-  @MinLength(1)
+  @IsPositive()
   @IsIn(Object.values(rolesStatesName).map(Number))
   state_id: number;
 

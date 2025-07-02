@@ -2,13 +2,12 @@ import {
   Column,
   Entity,
   JoinColumn,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { States, Users, Vehicles } from '../..';
+import { DriversVehicles, States, Users } from '../..';
 
 @Entity('drivers')
 export class Drivers {
@@ -44,17 +43,18 @@ export class Drivers {
   @Column({ length: 255 })
   driver_license_photo: string;
 
-  //>---------------------------------------------------------------->
-  /*
-    * TypeORM transactional auto-created tables
-  
-    > This are the atribute reference to transactional tables
+//>---------------------------------------------------------------->
+  /*  
+    % TypeORM reference connection atributes
+    
+    > This don't appear in database schema
     */
 
+
   /* 
-    Relation with vehicles
+    Transaccional relation with drivers_vehicles
     */
-  @ManyToMany(() => Vehicles, (vehicle) => vehicle.drivers)
-  @JoinTable({ name: 'drivers_vehicles' })
-  vehicles: Vehicles[];
+  @OneToMany(() => DriversVehicles, 
+    (driverVehicle) => driverVehicle.driver)
+  driver_vehicles: DriversVehicles[];
 }

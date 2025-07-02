@@ -6,6 +6,7 @@ import {
   OneToOne,
   ManyToMany,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import {
   AdminCompanies,
@@ -13,8 +14,8 @@ import {
   States,
   VehicleDocuments,
   LoadTypeCategories,
-  Drivers,
   TravelOrders,
+  DriversVehicles,
 } from '../';
 
 @Entity('vehicles')
@@ -67,12 +68,6 @@ export class Vehicles {
     */
 
   /* 
-    Relation with drivers
-    */
-  @ManyToMany(() => Drivers, (driver) => driver.vehicles)
-  drivers: Drivers[];
-
-  /* 
     Relation with travel_orders
     */
   @ManyToMany(() => TravelOrders, 
@@ -92,4 +87,12 @@ export class Vehicles {
   @OneToOne(() => VehicleDocuments,
     (vehicleDocument) => vehicleDocument.vehicle)
   vehicle_documents: VehicleDocuments;
+
+  /* 
+    Transaccional relation with admin_companies
+    */
+  @OneToMany(() => DriversVehicles, 
+    (driverVehicle) => driverVehicle.vehicle)
+  driver_vehicle: DriversVehicles[];
+
 }

@@ -6,7 +6,7 @@ import {
   AdminCompaniesModule,
   ClientCompaniesModule,
   CompanyIdentificationTypesModule,
-} from 'src/core/index.module';
+} from 'src/core';
 import * as entities from 'src/database';
 
 @Module({

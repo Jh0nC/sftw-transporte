@@ -1,8 +1,47 @@
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(process.env.PORT ?? 3000);
+  const configService = app.get(ConfigService);
+  const logger = new Logger('Bootstrap');
+
+  // CORS Configuration
+  app.enableCors({
+    origin: [
+      'http://localhost:3000', // API Gateway
+      'http://localhost:4200', // Frontend
+      'http://localhost:3001',
+      'http://localhost:3002',
+      'http://localhost:3003',
+      'http://localhost:3004',
+      'http://localhost:3005',
+      'http://localhost:3006',
+    ],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    credentials: true,
+  });
+
+  // Global Validation Pipe
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+      disableErrorMessages: process.env.NODE_ENV === 'production',
+    }),
+  );
+
+  // Global Prefix
+  app.setGlobalPrefix('api');
+
+  const port = configService.get('port') || 3002;
+  await app.listen(port);
+
+  logger.log(`🚚 Travel Orders Service is running on: http://localhost:${port}/api`);
 }
+
 bootstrap();

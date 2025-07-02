@@ -1,9 +1,8 @@
-/*
-  * Estados disponibles para permissions
-    > per_active        :id=9
-    > per_inactive      :id=10
-    */
 export enum permissionStatesName {
-  per_active = 9,
-  per_inactive = 10,
+  /*
+   * Estados disponibles para permissions
+   */
+
+  perm_active = 108,
+  perm_inactive = 109,
 }

@@ -3,22 +3,38 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Delete,
   Param,
   Query,
+  Put,
 } from '@nestjs/common';
-import { RolesService } from './roles.service';
-import { CreateRoleDto } from './dto/create-role.dto';
-import { UpdateRoleDto } from './dto/update-role.dto';
+import {
+  CreateRoleService,
+  DeleteRoleService,
+  FindAllRolesByCompanyService,
+  FindAllRolesService,
+  FindOneRoleService,
+  UpdateRoleService,
+} from './services';
+import { CreateRoleDto, UpdateRoleDto } from './dto/';
 
 @Controller('roles')
 export class RolesController {
-  constructor(private readonly rolesService: RolesService) {}
+  constructor(
+    private readonly createRole: CreateRoleService,
+    private readonly findAllRoles: FindAllRolesService,
+    private readonly findOneRole: FindOneRoleService,
+    private readonly findAllRolesByCompany: FindAllRolesByCompanyService,
+    private readonly updateRole: UpdateRoleService,
+    private readonly deleteRole: DeleteRoleService,
+  ) {}
 
   @Post()
-  create(@Body() createRoleDto: CreateRoleDto) {
-    return this.rolesService.create(createRoleDto);
+  create(
+    @Query('admin-company-id') adminCompanyId: number,
+    @Body() createRoleDto: CreateRoleDto,
+  ) {
+    return this.createRole.exec(adminCompanyId, createRoleDto);
   }
 
   @Get()
@@ -26,7 +42,12 @@ export class RolesController {
     const pageIndex = page ? parseInt(page, 10) : undefined;
     const limitNumber = limit ? parseInt(limit, 10) : undefined;
 
-    return this.rolesService.findAll(pageIndex, limitNumber);
+    return this.findAllRoles.exec(pageIndex, limitNumber);
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: number) {
+    return this.findOneRole.exec(id);
   }
 
   @Get('by-company/:id')
@@ -38,25 +59,16 @@ export class RolesController {
     const pageIndex = page ? parseInt(page, 10) : undefined;
     const limitNumber = limit ? parseInt(limit, 10) : undefined;
 
-    return this.rolesService.findAllByCompanyId(
-      companyId,
-      pageIndex,
-      limitNumber,
-    );
+    return this.findAllRolesByCompany.exec(companyId, pageIndex, limitNumber);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.rolesService.findOne(id);
-  }
-
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: number, @Body() updateRoleDto: UpdateRoleDto) {
-    return this.rolesService.update(id, updateRoleDto);
+    return this.updateRole.exec(id, updateRoleDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.rolesService.remove(id);
+  delete(@Param('id') id: number) {
+    return this.deleteRole.exec(id);
   }
 }

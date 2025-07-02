@@ -1,61 +1,48 @@
+import { Controller, Get, Body, Patch, Param, Query } from '@nestjs/common';
 import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Query,
-} from '@nestjs/common';
-import { CompanyIdentificationTypesService } from './company-identification-types.service';
-import { CreateCompanyIdentificationTypeDto } from './dto/create-company-identification-type.dto';
-import { UpdateCompanyIdentificationTypeDto } from './dto/update-company-identification-type.dto';
+  FindAllCompanyIdentificationTypesService,
+  FindOneCompanyIdentificationTypesService,
+  FindAllAdminCompaniesWithIdentificationTypeService,
+  UpdateCompanyIdentificationTypeService,
+} from './services';
+import { UpdateCompanyIdentificationTypeDto } from './dto/';
 
 @Controller('company-identification-types')
 export class CompanyIdentificationTypesController {
   constructor(
-    private readonly companyIdentificationTypesService: CompanyIdentificationTypesService,
+    private readonly findAllCompanyIdentificationTypes: FindAllCompanyIdentificationTypesService,
+    private readonly findOneCompanyIdentificationType: FindOneCompanyIdentificationTypesService,
+    private readonly findAllAdminCompaniesWithIdentificationType: FindAllAdminCompaniesWithIdentificationTypeService,
+    private readonly updateCompanyIdentificationType: UpdateCompanyIdentificationTypeService,
   ) {}
-
-  @Post()
-  create(
-    @Body()
-    createCompanyIdentificationTypeDto: CreateCompanyIdentificationTypeDto,
-  ) {
-    return this.companyIdentificationTypesService.create(
-      createCompanyIdentificationTypeDto,
-    );
-  }
 
   @Get()
   findAll(@Query('page') page: string, @Query('limit') limit: string) {
     const pageIndex = page ? parseInt(page, 10) : undefined;
     const limitNumber = limit ? parseInt(limit, 10) : undefined;
 
-    return this.companyIdentificationTypesService.findAll(
-      pageIndex,
-      limitNumber,
-    );
-  }
-
-  @Get('admin-companies/:id')
-  findAllAdminNamesWithIdentificationType(@Param('id') id: number) {
-    return this.companyIdentificationTypesService.findAllAdminNamesWithIdentificationType(
-      id,
-    );
-  }
-
-  @Get('client-companies/:id')
-  findAllClientsNamesWithIdentificationType(@Param('id') id: number) {
-    return this.companyIdentificationTypesService.findAllClientsNamesWithIdentificationType(
-      id,
-    );
+    return this.findAllCompanyIdentificationTypes.exec(pageIndex, limitNumber);
   }
 
   @Get(':id')
   findOne(@Param('id') id: number) {
-    return this.companyIdentificationTypesService.findOne(id);
+    return this.findOneCompanyIdentificationType.exec(id);
+  }
+
+  @Get('admin-companies/:id')
+  findAllAdminWithIdentificationType(
+    @Param('id') id: number,
+    @Query('page') page: string,
+    @Query('limit') limit: string,
+  ) {
+    const pageIndex = page ? parseInt(page, 10) : undefined;
+    const limitNumber = limit ? parseInt(limit, 10) : undefined;
+
+    return this.findAllAdminCompaniesWithIdentificationType.exec(
+      id,
+      pageIndex,
+      limitNumber,
+    );
   }
 
   @Patch(':id')
@@ -64,14 +51,9 @@ export class CompanyIdentificationTypesController {
     @Body()
     updateCompanyIdentificationTypeDto: UpdateCompanyIdentificationTypeDto,
   ) {
-    return this.companyIdentificationTypesService.update(
+    return this.updateCompanyIdentificationType.exec(
       id,
       updateCompanyIdentificationTypeDto,
     );
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.companyIdentificationTypesService.remove(id);
   }
 }

@@ -8,7 +8,8 @@
 export * from './states.entity';
 
 //> Transaccionals
-export * from './companies/users-admin-companies.entity'
+export * from './transaction/users-admin-companies.entity'
+export * from './transaction/drivers_vehicles.entity';
 
 //? Related Users
 export * from './users/users.entity';

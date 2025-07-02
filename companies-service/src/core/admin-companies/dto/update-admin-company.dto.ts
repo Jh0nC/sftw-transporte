@@ -1,8 +1,7 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateAdminCompanyDto } from './create-admin-company.dto';
 import { Transform } from 'class-transformer';
 import {
   IsEmail,
+  IsIn,
   IsInt,
   IsJSON,
   IsNumberString,
@@ -10,20 +9,19 @@ import {
   IsPositive,
   IsString,
   Length,
-  MinLength,
 } from 'class-validator';
+import { adminCompanyStates } from 'src/types';
 
-export class UpdateAdminCompanyDto extends PartialType(CreateAdminCompanyDto) {
+export class UpdateAdminCompanyDto {
   @IsOptional()
   @IsInt()
   @IsPositive()
-  @MinLength(1)
+  @IsIn(Object.values(adminCompanyStates).map(Number))
   state_id: number;
 
   @IsOptional()
   @IsInt()
   @IsPositive()
-  @MinLength(1)
   identification_type_id: number;
 
   @IsOptional()
@@ -62,7 +60,6 @@ export class UpdateAdminCompanyDto extends PartialType(CreateAdminCompanyDto) {
   @IsOptional()
   @IsInt()
   @IsPositive()
-  @MinLength(1)
   representative_document_type_id: number;
 
   @IsOptional()
@@ -72,5 +69,5 @@ export class UpdateAdminCompanyDto extends PartialType(CreateAdminCompanyDto) {
 
   @IsOptional()
   @IsJSON()
-  json_string_config: any;
+  json_string_config: JSON | string;
 }

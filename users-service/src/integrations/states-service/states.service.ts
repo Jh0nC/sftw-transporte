@@ -1,66 +1,67 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
-import { envVariables } from 'src/config';
-import { firstValueFrom } from 'rxjs';
+import { catchError, firstValueFrom, throwError } from 'rxjs';
 import { States } from 'src/database';
+import { BaseIntegrationService } from '../base-integration.service';
+import { AxiosError } from 'axios';
+import { ExternalServiceErrorData } from 'src/types';
+import { conflictResponse, errorResponse, notFoundResponse } from 'src/utils';
 
 @Injectable()
-export class StatesService {
-  private readonly statesServiceUrl: string;
-
-  /*
-    * Inicializa la URL del servicio de estados.
-
-  > Lee la URL desde las variables de entorno.
-  > Se salta la validación de la variable de entorno definida ya que en el procesado ya se toma en cuenta y no se inicia si no esta
-    */
-  constructor(private readonly httpService: HttpService) {
-    this.statesServiceUrl = envVariables.statesServiceUrl;
+export class StatesService extends BaseIntegrationService {
+  constructor(httpService: HttpService) {
+    super(httpService, 'statesServiceUrl', 'States External Service');
   }
 
-  /*
-    * Obtiene un estado específico por su ID desde un servicio externo.
-
-  > Realiza una petición GET al servicio de estados externo utilizando el ID proporcionado.
-  > Si la respuesta del servicio externo no contiene datos, lanza una excepción HttpException con un estado NOT_FOUND.
-  > Retorna los datos del estado obtenidos del servicio externo.
-  > Maneja errores durante la petición, relanzando las excepciones HttpException o lanzando una nueva excepción INTERNAL_SERVER_ERROR en caso de otros errores.
-    */
-  async findOne(id: number): Promise<States> {
+  async findOne(id: number): Promise<States | undefined> {
     try {
+      const url = `${this.baseUrl}/states/${id}`;
+
       const response = await firstValueFrom(
-        this.httpService.get(`${this.statesServiceUrl}/states/${id}`),
+        this.httpService.get<States>(url).pipe(
+          catchError((axiosError: AxiosError<ExternalServiceErrorData>) => {
+            Logger.error(
+              `Error calling external States Service [${url}]`,
+              axiosError.response?.data || axiosError.message,
+              this.serviceName,
+            );
+
+            if (axiosError.response?.status === HttpStatus.NOT_FOUND) {
+              notFoundResponse(`id_state: ${id}`);
+            }
+
+            if (axiosError.response?.status === HttpStatus.CONFLICT) {
+              const { attribute, conflict, message } =
+                axiosError.response?.data || {};
+              conflictResponse(attribute, conflict, message);
+            }
+
+            return throwError(() =>
+              errorResponse(
+                axiosError,
+                `Error retrieving states from external service: ${this.httpService}`,
+              ),
+            );
+          }),
+        ),
       );
 
-      if (!response?.data) {
-        throw new HttpException(
-          {
-            statusCode: HttpStatus.NOT_FOUND,
-            message: `Request data, id_state: ${id}, was not found`,
-            error: 'Not Found',
-          },
-          HttpStatus.NOT_FOUND,
-        );
+      if (response?.data == undefined || response?.data == null) {
+        notFoundResponse(`id_state: ${id}`);
       }
 
-      return response.data as States;
+      return response.data;
     } catch (error) {
-      if (error instanceof HttpException) {
+      if (
+        error instanceof HttpException ||
+        (error instanceof AxiosError && error.response?.status)
+      ) {
         throw error;
       }
 
-      Logger.error(
-        'Error obtaining state',
-        error.response?.data || error.message,
-      );
-
-      throw new HttpException(
-        {
-          statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-          message: `Error retrieving state`,
-          error: error.message || String(error),
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
+      errorResponse(
+        error,
+        'Unexpected error in AdminCompaniesService external call',
       );
     }
   }

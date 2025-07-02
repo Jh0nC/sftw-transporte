@@ -1,22 +1,24 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { AdminCompaniesService } from './admin-companies.service';
+import * as AdminCompaniesServices from './services/';
 import { AdminCompaniesController } from './admin-companies.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AdminCompanies } from 'src/database';
-import { CompanyIdentificationTypesModule } from 'src/core/index.module';
-import { CompanyIdentificationTypesService } from 'src/core/index.service';
-import { UsersService } from 'src/integrations';
+import { CompanyIdentificationTypesModule } from 'src/core';
+import { HttpModule } from '@nestjs/axios';
+import * as CompanyIdentificationTypesServices from '../company-identification-types/services/';
+import * as IntegrationServices from 'src/integrations';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([AdminCompanies]),
     forwardRef(() => CompanyIdentificationTypesModule),
+    HttpModule,
   ],
   controllers: [AdminCompaniesController],
   providers: [
-    AdminCompaniesService,
-    CompanyIdentificationTypesService,
-    UsersService,
+    ...Object.values(AdminCompaniesServices),
+    ...Object.values(CompanyIdentificationTypesServices),
+    ...Object.values(IntegrationServices),
   ],
   exports: [TypeOrmModule],
 })

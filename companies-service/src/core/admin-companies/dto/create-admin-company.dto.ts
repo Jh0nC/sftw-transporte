@@ -6,13 +6,11 @@ import {
   IsPositive,
   IsString,
   Length,
-  MinLength,
 } from 'class-validator';
 
 export class CreateAdminCompanyDto {
   @IsInt()
   @IsPositive()
-  @MinLength(1)
   identification_type_id: number;
 
   @IsNumberString()
@@ -44,7 +42,6 @@ export class CreateAdminCompanyDto {
 
   @IsInt()
   @IsPositive()
-  @MinLength(1)
   representative_document_type_id: number;
 
   @IsNumberString()
